@@ -1,0 +1,80 @@
+import java.sql.*;
+
+public class CinemaApp {
+
+    public static void main(String[] args) {
+        try {
+            // Establish database connection
+            Connection connection = DatabaseConnector.getConnection();
+            LoginService loginService = new LoginService(connection);
+
+            // Example user input for login (username and password)
+            String inputUsername = "admin";  // Example input
+            String inputPassword = "admin123";  // Example input
+
+            // Authenticate user
+            boolean isAuthenticated = loginService.authenticate(inputUsername, inputPassword);
+
+            if (isAuthenticated) {
+                // Get user info after successful login
+                User user = loginService.getUserInfo(inputUsername);
+                System.out.println("Login successful. Welcome " + user.getUsername() + "!");
+                System.out.println("Your role: " + user.getRole());
+
+                // Role-based menu system
+                showMenuForRole(user.getRole());
+
+            } else {
+                System.out.println("Invalid username or password.");
+            }
+
+            // Close the connection after use
+            connection.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Role-based menu display
+    private static void showMenuForRole(String role) {
+        switch (role.toLowerCase()) {
+            case "admin":
+                showAdminMenu();
+                break;
+            case "manager":
+                showManagerMenu();
+                break;
+            case "cashier":
+                showCashierMenu();
+                break;
+            default:
+                System.out.println("Role not recognized. No menu available.");
+        }
+    }
+
+    // Admin menu options
+    private static void showAdminMenu() {
+        System.out.println("Welcome Admin! Choose an option:");
+        System.out.println("1. Manage Users");
+        System.out.println("2. View Sales Reports");
+        System.out.println("3. Manage Movies");
+        // Implement logic for admin features here
+    }
+
+    // Manager menu options
+    private static void showManagerMenu() {
+        System.out.println("Welcome Manager! Choose an option:");
+        System.out.println("1. View Sessions");
+        System.out.println("2. Manage Halls");
+        // Implement logic for manager features here
+    }
+
+    // Cashier menu options
+    private static void showCashierMenu() {
+        System.out.println("Welcome Cashier! Choose an option:");
+        System.out.println("1. Process a Sale");
+        System.out.println("2. View Cart");
+        // Implement logic for cashier features here
+    }
+}

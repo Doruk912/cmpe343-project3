@@ -1,0 +1,109 @@
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class MovieDetails {
+    private Connection dbConnection;
+
+    public MovieDetails(Connection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    public Map<String, String> getMovieDetails(int movieId) {
+        String query = "SELECT title, poster_url, genre, summary FROM Movies WHERE movie_id = ?";
+        try (PreparedStatement statement = dbConnection.prepareStatement(query)) {
+            statement.setInt(1, movieId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                Map<String, String> movieDetails = new HashMap<>();
+                movieDetails.put("title", resultSet.getString("title"));
+                movieDetails.put("poster_url", resultSet.getString("poster_url"));
+                movieDetails.put("genre", resultSet.getString("genre"));
+                movieDetails.put("summary", resultSet.getString("summary"));
+                return movieDetails;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getMoviePoster(int movieId) {
+        String query = "SELECT poster_url FROM Movies WHERE movie_id = ?";
+        try (PreparedStatement statement = dbConnection.prepareStatement(query)) {
+            statement.setInt(1, movieId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("poster_url");
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getMovieGenre(int movieId) {
+        String query = "SELECT genre FROM Movies WHERE movie_id = ?";
+        try (PreparedStatement statement = dbConnection.prepareStatement(query)) {
+            statement.setInt(1, movieId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("genre");
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getMovieSummary(int movieId) {
+        String query = "SELECT summary FROM Movies WHERE movie_id = ?";
+        try (PreparedStatement statement = dbConnection.prepareStatement(query)) {
+            statement.setInt(1, movieId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("summary");
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Map<String, String>> getAllMovieDetails() {
+        String query = "SELECT movie_id, title, poster_url, genre, summary FROM Movies";
+        List<Map<String, String>> allMovieDetails = new ArrayList<>();
+
+        try (Statement statement = dbConnection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                Map<String, String> movieDetails = new HashMap<>();
+                movieDetails.put("movie_id", String.valueOf(resultSet.getInt("movie_id")));
+                movieDetails.put("title", resultSet.getString("title"));
+                movieDetails.put("poster_url", resultSet.getString("poster_url"));
+                movieDetails.put("genre", resultSet.getString("genre"));
+                movieDetails.put("summary", resultSet.getString("summary"));
+                allMovieDetails.add(movieDetails);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return allMovieDetails;
+    }
+}

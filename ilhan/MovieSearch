@@ -1,0 +1,34 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class MovieSearch {
+    private List<Movie> movieList;
+
+    public MovieSearch() {
+        movieList = new ArrayList<>();
+    }
+
+    public void addMovie(Movie movie) {
+        movieList.add(movie);
+    }
+
+    public List<Movie> searchByGenre(String genre) {
+        List<Movie> result = new ArrayList<>();
+        for (Movie movie : movieList) {
+            if (movie.getGenre().equalsIgnoreCase(genre)) {
+                result.add(movie);
+            }
+        }
+        return result;
+    }
+
+    public List<Movie> searchByTitle(String title) {
+        List<Movie> result = new ArrayList<>();
+        for (Movie movie : movieList) {
+            if (movie.getTitle().toLowerCase().contains(title.toLowerCase())) {
+                result.add(movie);
+            }
+        }
+        return result;
+    }
+}

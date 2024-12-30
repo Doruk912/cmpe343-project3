@@ -1,0 +1,149 @@
+import java.sql.*;
+import java.util.*;
+
+public class SeatSelection {
+    private Connection dbConnection;
+
+    public SeatSelection(Connection dbConnection) {
+        // Initialize the SeatSelection class with a database connection
+        this.dbConnection = dbConnection;
+    }
+
+    public List<Map<String, Object>> getSeatingLayout(int hallId, int sessionId) throws SQLException {
+        // Get the seating layout of a hall for a specific session
+        List<Map<String, Object>> seatingLayout = new ArrayList<>();
+        String query = "SELECT seat_id, row_number, seat_number, status FROM Seats WHERE hall_id = ? AND session_id = ?";
+        
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, hallId);
+            stmt.setInt(2, sessionId);
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                Map<String, Object> seat = new HashMap<>();
+                seat.put("seat_id", resultSet.getInt("seat_id"));
+                seat.put("row_number", resultSet.getInt("row_number"));
+                seat.put("seat_number", resultSet.getInt("seat_number"));
+                seat.put("status", resultSet.getString("status"));
+                seatingLayout.add(seat);
+            }
+        }
+
+        return seatingLayout;
+    }
+
+    public boolean checkSeatAvailability(int seatId) throws SQLException {
+        // Check if a specific seat is available or already occupied
+        String query = "SELECT status FROM Seats WHERE seat_id = ?";
+        
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, seatId);
+            ResultSet resultSet = stmt.executeQuery();
+
+            if (resultSet.next() && "available".equals(resultSet.getString("status"))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean reserveSeat(int seatId, int customerId) throws SQLException {
+        // Reserve a seat for a customer by updating the seat's status to 'occupied'
+        if (checkSeatAvailability(seatId)) {
+            String query = "UPDATE Seats SET status = 'occupied', customer_id = ? WHERE seat_id = ?";
+            
+            try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+                stmt.setInt(1, customerId);
+                stmt.setInt(2, seatId);
+                int rowsAffected = stmt.executeUpdate();
+                
+                if (rowsAffected > 0) {
+                    dbConnection.commit(); // Commit the transaction
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean cancelSeatReservation(int seatId) throws SQLException {
+        // Cancel a seat reservation by updating the seat's status back to 'available'
+        String query = "SELECT status FROM Seats WHERE seat_id = ?";
+        
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, seatId);
+            ResultSet resultSet = stmt.executeQuery();
+
+            if (resultSet.next() && "occupied".equals(resultSet.getString("status"))) {
+                String updateQuery = "UPDATE Seats SET status = 'available', customer_id = NULL WHERE seat_id = ?";
+                try (PreparedStatement updateStmt = dbConnection.prepareStatement(updateQuery)) {
+                    updateStmt.setInt(1, seatId);
+                    int rowsAffected = updateStmt.executeUpdate();
+                    
+                    if (rowsAffected > 0) {
+                        dbConnection.commit(); // Commit the transaction
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public List<Integer> getReservedSeats(int sessionId) throws SQLException {
+        // Get a list of reserved seats for a specific session
+        List<Integer> reservedSeats = new ArrayList<>();
+        String query = "SELECT seat_id FROM Seats WHERE session_id = ? AND status = 'occupied'";
+        
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, sessionId);
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                reservedSeats.add(resultSet.getInt("seat_id"));
+            }
+        }
+
+        return reservedSeats;
+    }
+
+    public List<Integer> getAvailableSeats(int hallId, int sessionId) throws SQLException {
+        // Get a list of available seats for a specific hall and session
+        List<Integer> availableSeats = new ArrayList<>();
+        String query = "SELECT seat_id FROM Seats WHERE hall_id = ? AND session_id = ? AND status = 'available'";
+        
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, hallId);
+            stmt.setInt(2, sessionId);
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                availableSeats.add(resultSet.getInt("seat_id"));
+            }
+        }
+
+        return availableSeats;
+    }
+
+    public static void main(String[] args) {
+        try {
+            // Create a connection to the database
+            String url = "jdbc:sqlite:cinema_center.db";
+            Connection connection = DriverManager.getConnection(url);
+            connection.setAutoCommit(false); // Enable transaction mode
+
+            SeatSelection seatSelection = new SeatSelection(connection);
+
+            // Example usage
+            List<Map<String, Object>> layout = seatSelection.getSeatingLayout(1, 101);
+            System.out.println(layout);
+
+            // Close the connection
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

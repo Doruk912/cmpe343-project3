@@ -1,0 +1,36 @@
+public class Movie {
+    private String title;
+    private String poster;
+    private String genre;
+    private String summary;
+
+    public Movie(String title, String poster, String genre, String summary) {
+        this.title = title;
+        this.poster = poster;
+        this.genre = genre;
+        this.summary = summary;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void displayMovieDetails() {
+        System.out.println("Title: " + title);
+        System.out.println("Genre: " + genre);
+        System.out.println("Summary: " + summary);
+        System.out.println("Poster: " + poster);
+    }
+}

@@ -1,0 +1,74 @@
+import java.sql.*;
+
+public class LoginManager {
+    private Connection conn;
+
+    public LoginManager() {
+        try {
+            // Initialize database connection
+            this.conn = DriverManager.getConnection("jdbc:sqlite:cinema_center.db");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to authenticate user
+    public boolean authenticateUser(String username, String password) {
+        try {
+            PreparedStatement stmt = conn.prepareStatement("SELECT password FROM Users WHERE username = ?");
+            stmt.setString(1, username);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                String storedPassword = result.getString("password");
+                return storedPassword.equals(password); // Compare stored password with input password
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Method to get user role after successful authentication
+    public String getUserRole(String username) {
+        try {
+            PreparedStatement stmt = conn.prepareStatement("SELECT role FROM Users WHERE username = ?");
+            stmt.setString(1, username);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                return result.getString("role");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Method to login a user
+    public boolean login(String username, String password) {
+        boolean isAuthenticated = authenticateUser(username, password);
+        if (isAuthenticated) {
+            System.out.println("Login successful! Redirecting to " + getUserRole(username) + " interface.");
+        } else {
+            System.out.println("Login failed! Invalid username or password.");
+        }
+        return isAuthenticated;
+    }
+
+    // Method to log out (if applicable, just a message for now)
+    public void logout() {
+        System.out.println("Logging out...");
+    }
+
+    // Close the database connection
+    public void close() {
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

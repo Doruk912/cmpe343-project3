@@ -1,0 +1,121 @@
+-- Create the database
+CREATE DATABASE Group15_CinemaCenter;
+
+-- Use the database
+USE Group15_CinemaCenter;
+
+-- Users table
+CREATE TABLE Users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    role ENUM('cashier', 'admin', 'manager') NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50)
+);
+
+-- Movies table
+CREATE TABLE Movies (
+    movie_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    poster_url TEXT,
+    genre VARCHAR(100) NOT NULL,
+    summary TEXT NOT NULL
+);
+
+-- Halls table
+CREATE TABLE Halls (
+    hall_id INT AUTO_INCREMENT PRIMARY KEY,
+    hall_name VARCHAR(50) NOT NULL,
+    total_seats INT NOT NULL
+);
+
+-- Sessions table
+CREATE TABLE Sessions (
+    session_id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT NOT NULL,
+    hall_id INT NOT NULL,
+    session_date DATE NOT NULL,
+    session_time TIME NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES Movies(movie_id) ON DELETE CASCADE,
+    FOREIGN KEY (hall_id) REFERENCES Halls(hall_id) ON DELETE CASCADE
+);
+
+-- Seats table
+CREATE TABLE Seats (
+    seat_id INT AUTO_INCREMENT PRIMARY KEY,
+    hall_id INT NOT NULL,
+    row_number INT NOT NULL,
+    seat_number INT NOT NULL,
+    FOREIGN KEY (hall_id) REFERENCES Halls(hall_id) ON DELETE CASCADE,
+    UNIQUE(hall_id, row_number, seat_number)
+);
+
+-- Shopping Cart table
+CREATE TABLE ShoppingCart (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    total_price DECIMAL(10, 2) DEFAULT 0.00,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+);
+
+-- Cart Items table
+CREATE TABLE CartItems (
+    cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,
+    item_type ENUM('ticket', 'product') NOT NULL,
+    item_id INT NOT NULL,
+    quantity INT DEFAULT 1,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (cart_id) REFERENCES ShoppingCart(cart_id) ON DELETE CASCADE
+);
+
+-- Products table
+CREATE TABLE Products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT NOT NULL,
+    image_url TEXT
+);
+
+-- Sales table
+CREATE TABLE Sales (
+    sale_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    tax_amount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+);
+
+-- Sale Items table
+CREATE TABLE SaleItems (
+    sale_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    sale_id INT NOT NULL,
+    item_type ENUM('ticket', 'product') NOT NULL,
+    item_id INT NOT NULL,
+    quantity INT DEFAULT 1,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (sale_id) REFERENCES Sales(sale_id) ON DELETE CASCADE
+);
+
+-- Discounts table
+CREATE TABLE Discounts (
+    discount_id INT AUTO_INCREMENT PRIMARY KEY,
+    discount_name VARCHAR(50) NOT NULL,
+    discount_rate DECIMAL(5, 2) NOT NULL CHECK (discount_rate BETWEEN 0 AND 100),
+    applicable_age_group ENUM('child', 'adult', 'senior') NOT NULL
+);
+
+-- Revenue Reports table
+CREATE TABLE RevenueReports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    generated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_revenue DECIMAL(10, 2) NOT NULL,
+    total_tax DECIMAL(10, 2) NOT NULL
+);
+
+-- Add default admin user
+INSERT INTO Users (username, password, role, first_name, last_name)
+VALUES ('admin', 'admin123', 'admin', 'Default', 'Admin');

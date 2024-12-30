@@ -1,0 +1,90 @@
+import java.util.*;
+import java.text.SimpleDateFormat;
+
+public class AdminInterface {
+    private User adminUser;
+    private List<Movie> movies;
+    private List<Schedule> schedules;
+    private List<Refund> refunds;
+
+    public AdminInterface(User adminUser) {
+        this.adminUser = adminUser;
+        this.movies = new ArrayList<>();
+        this.schedules = new ArrayList<>();
+        this.refunds = new ArrayList<>();
+    }
+
+    public void addMovie(String title, String poster, String genre, String summary) {
+        Movie newMovie = new Movie(title, poster, genre, summary);
+        movies.add(newMovie);
+        System.out.println("Movie '" + title + "' added successfully.");
+    }
+
+    public void updateMovie(int movieId, String title, String poster, String genre, String summary) {
+        Movie movie = movies.get(movieId);
+        if (title != null) {
+            movie.setTitle(title);
+        }
+        if (poster != null) {
+            movie.setPoster(poster);
+        }
+        if (genre != null) {
+            movie.setGenre(genre);
+        }
+        if (summary != null) {
+            movie.setSummary(summary);
+        }
+        System.out.println("Movie '" + movie.getTitle() + "' updated successfully.");
+    }
+
+    public void createSchedule(int movieId, String hall, List<String> sessions) {
+        Schedule schedule = new Schedule(movieId, hall, sessions);
+        schedules.add(schedule);
+        System.out.println("Schedule for movie '" + movies.get(movieId).getTitle() + "' created successfully.");
+    }
+
+    public void updateSchedule(int scheduleId, Integer movieId, String hall, List<String> sessions) {
+        Schedule schedule = schedules.get(scheduleId);
+        if (movieId != null) {
+            schedule.setMovieId(movieId);
+        }
+        if (hall != null) {
+            schedule.setHall(hall);
+        }
+        if (sessions != null) {
+            schedule.setSessions(sessions);
+        }
+        System.out.println("Schedule updated successfully for movie '" + movies.get(schedule.getMovieId()).getTitle() + "'.");
+    }
+
+    public void processCancellation(int ticketId, double refundAmount) {
+        Refund refund = new Refund(ticketId, refundAmount);
+        refunds.add(refund);
+        System.out.println("Refund processed for ticket " + ticketId + ", amount: $" + refundAmount + ".");
+    }
+
+    public void viewMovies() {
+        System.out.println("Movies in the database:");
+        for (int i = 0; i < movies.size(); i++) {
+            Movie movie = movies.get(i);
+            System.out.println((i + 1) + ". " + movie.getTitle() + " - " + movie.getGenre());
+        }
+    }
+
+    public void viewSchedules() {
+        System.out.println("Schedules:");
+        for (int i = 0; i < schedules.size(); i++) {
+            Schedule schedule = schedules.get(i);
+            Movie movie = movies.get(schedule.getMovieId());
+            String sessions = String.join(", ", schedule.getSessions());
+            System.out.println((i + 1) + ". Movie: " + movie.getTitle() + ", Hall: " + schedule.getHall() + ", Sessions: " + sessions);
+        }
+    }
+
+    public void viewRefunds() {
+        System.out.println("Processed Refunds:");
+        for (Refund refund : refunds) {
+            System.out.println("Ticket ID: " + refund.getTicketId() + ", Refund Amount: $" + refund.getRefundAmount() + ", Date: " + refund.getDate());
+        }
+    }
+}

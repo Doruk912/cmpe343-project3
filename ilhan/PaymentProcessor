@@ -1,0 +1,125 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+
+public class PaymentProcessor {
+
+    private double taxRate;
+
+    public PaymentProcessor(double taxRate) {
+        // Initialize with a default tax rate of 0.1
+        this.taxRate = taxRate;
+    }
+
+    public PaymentProcessor() {
+        this.taxRate = 0.1; // Default tax rate
+    }
+
+    public double[] calculateTotal(double ticketPrice, List<double[]> additionalProducts, double discount) {
+        // Calculate total for additional products
+        double productsTotal = 0;
+        for (double[] product : additionalProducts) {
+            productsTotal += product[0] * product[1];  // Price * Quantity
+        }
+
+        // Calculate the total before discount
+        double totalBeforeDiscount = ticketPrice + productsTotal;
+
+        // Apply discount if any
+        double totalAfterDiscount = totalBeforeDiscount - discount;
+
+        // Calculate tax
+        double tax = totalAfterDiscount * taxRate;
+
+        // Calculate the final total (including tax)
+        double finalTotal = totalAfterDiscount + tax;
+
+        return new double[]{finalTotal, tax};
+    }
+
+    public String processPayment(double amountDue, String paymentMethod) {
+        if ("cash".equalsIgnoreCase(paymentMethod)) {
+            if (amountDue <= 0) {
+                return "Error: The amount due cannot be zero or negative.";
+            }
+            // Assuming cash payment is always successful
+            return String.format("Payment of $%.2f received successfully in cash.", amountDue);
+        } else {
+            return "Error: Invalid payment method.";
+        }
+    }
+
+    public String generateInvoice(
+            String movieName, List<String> seats,
+            List<double[]> additionalProducts, double total, double tax,
+            String paymentMethod) {
+        // Generate a unique invoice ID
+        String invoiceId = "INV-" + (100000 + new Random().nextInt(900000));
+
+        // Get current date and time
+        String currentTime = java.time.LocalDateTime.now().toString();
+
+        // Format ticket details
+        String ticketInfo = "Movie: " + movieName + "<br>Seats: " + String.join(", ", seats);
+
+        // Format additional products
+        StringBuilder productInfo = new StringBuilder();
+        for (double[] product : additionalProducts) {
+            productInfo.append(product[1]).append(" x ").append(product[0]).append(" (Price: $")
+                    .append(product[0]).append(" each)<br>");
+        }
+
+        // Construct the invoice HTML content
+        String invoiceHtml = String.format(
+                "<html>\n" +
+                        "<head><title>Invoice %s</title></head>\n" +
+                        "<body>\n" +
+                        "<h2>Group15 CinemaCenter - Invoice</h2>\n" +
+                        "<p><strong>Invoice ID:</strong> %s</p>\n" +
+                        "<p><strong>Date:</strong> %s</p>\n" +
+                        "<p><strong>Payment Method:</strong> %s</p>\n" +
+                        "<p><strong>Ticket Details:</strong><br>%s</p>\n" +
+                        "<p><strong>Additional Products:</strong><br>%s</p>\n" +
+                        "<p><strong>Subtotal:</strong> $%.2f</p>\n" +
+                        "<p><strong>Tax:</strong> $%.2f</p>\n" +
+                        "<p><strong>Total:</strong> $%.2f</p>\n" +
+                        "</body>\n" +
+                        "</html>",
+                invoiceId, invoiceId, currentTime, paymentMethod, ticketInfo, productInfo.toString(),
+                total - tax, tax, total);
+
+        return invoiceHtml;
+    }
+
+    public void saveInvoice(String invoiceHtml, String fileName) {
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write(invoiceHtml);
+            System.out.println("Invoice saved as " + fileName);
+        } catch (IOException e) {
+            System.out.println("Error saving invoice: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        PaymentProcessor paymentProcessor = new PaymentProcessor();
+
+        // Example usage
+        double ticketPrice = 15.0;
+        List<double[]> additionalProducts = List.of(new double[]{5.0, 2}, new double[]{3.0, 3});
+        double discount = 5.0;
+
+        double[] totals = paymentProcessor.calculateTotal(ticketPrice, additionalProducts, discount);
+        double total = totals[0];
+        double tax = totals[1];
+
+        String paymentMessage = paymentProcessor.processPayment(total, "cash");
+        System.out.println(paymentMessage);
+
+        String invoiceHtml = paymentProcessor.generateInvoice(
+                "Avatar", List.of("A1", "A2", "B1"),
+                additionalProducts, total, tax, "cash");
+
+        paymentProcessor.saveInvoice(invoiceHtml, "invoice.html");
+    }
+}

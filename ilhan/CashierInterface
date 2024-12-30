@@ -1,0 +1,198 @@
+import java.sql.*;
+import java.util.*;
+
+public class CashierInterface {
+    private Connection dbConnection;
+    private User loggedInUser;
+    private List<Map<String, Object>> shoppingCart;
+
+    public CashierInterface(Connection dbConnection, User loggedInUser) {
+        this.dbConnection = dbConnection;
+        this.loggedInUser = loggedInUser;
+        this.shoppingCart = new ArrayList<>();
+    }
+
+    // Stage 1: Movie Search
+    public List<Map<String, Object>> searchMoviesByGenre(String genre) throws SQLException {
+        String query = "SELECT movie_id, title, genre, summary FROM Movies WHERE genre LIKE ?";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setString(1, "%" + genre + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                return mapMoviesResultSet(rs);
+            }
+        }
+    }
+
+    public List<Map<String, Object>> searchMoviesByPartialName(String partialName) throws SQLException {
+        String query = "SELECT movie_id, title, genre, summary FROM Movies WHERE title LIKE ?";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setString(1, "%" + partialName + "%");
+            try (ResultSet rs = stmt.executeQuery()) {
+                return mapMoviesResultSet(rs);
+            }
+        }
+    }
+
+    public List<Map<String, Object>> searchMoviesByFullName(String fullName) throws SQLException {
+        String query = "SELECT movie_id, title, genre, summary FROM Movies WHERE title = ?";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setString(1, fullName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return mapMoviesResultSet(rs);
+            }
+        }
+    }
+
+    private List<Map<String, Object>> mapMoviesResultSet(ResultSet rs) throws SQLException {
+        List<Map<String, Object>> movies = new ArrayList<>();
+        while (rs.next()) {
+            Map<String, Object> movie = new HashMap<>();
+            movie.put("movie_id", rs.getInt("movie_id"));
+            movie.put("title", rs.getString("title"));
+            movie.put("genre", rs.getString("genre"));
+            movie.put("summary", rs.getString("summary"));
+            movies.add(movie);
+        }
+        return movies;
+    }
+
+    public Map<String, Object> getMovieDetails(int movieId) throws SQLException {
+        String query = "SELECT title, poster_url, genre, summary FROM Movies WHERE movie_id = ?";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, movieId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Map<String, Object> movie = new HashMap<>();
+                    movie.put("title", rs.getString("title"));
+                    movie.put("poster_url", rs.getString("poster_url"));
+                    movie.put("genre", rs.getString("genre"));
+                    movie.put("summary", rs.getString("summary"));
+                    return movie;
+                }
+                return null;
+            }
+        }
+    }
+
+    // Stage 2: Day, Session, and Hall Selection
+    public List<Map<String, Object>> getAvailableSessions(int movieId) throws SQLException {
+        String query = "SELECT session_id, session_date, session_time, hall_id FROM Sessions WHERE movie_id = ?";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, movieId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return mapSessionsResultSet(rs);
+            }
+        }
+    }
+
+    private List<Map<String, Object>> mapSessionsResultSet(ResultSet rs) throws SQLException {
+        List<Map<String, Object>> sessions = new ArrayList<>();
+        while (rs.next()) {
+            Map<String, Object> session = new HashMap<>();
+            session.put("session_id", rs.getInt("session_id"));
+            session.put("session_date", rs.getDate("session_date"));
+            session.put("session_time", rs.getTime("session_time"));
+            session.put("hall_id", rs.getInt("hall_id"));
+            sessions.add(session);
+        }
+        return sessions;
+    }
+
+    public Map<String, Object> getHallDetails(int hallId) throws SQLException {
+        String query = "SELECT total_seats FROM Halls WHERE hall_id = ?";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, hallId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Map<String, Object> hallDetails = new HashMap<>();
+                    hallDetails.put("total_seats", rs.getInt("total_seats"));
+                    return hallDetails;
+                }
+                return null;
+            }
+        }
+    }
+
+    // Stage 3: Seat Selection
+    public List<Map<String, Object>> getSeatingLayout(int hallId, int sessionId) throws SQLException {
+        String query = "SELECT seat_id, row_number, seat_number, status FROM Seats WHERE hall_id = ? AND session_id = ?";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query)) {
+            stmt.setInt(1, hallId);
+            stmt.setInt(2, sessionId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return mapSeatsResultSet(rs);
+            }
+        }
+    }
+
+    private List<Map<String, Object>> mapSeatsResultSet(ResultSet rs) throws SQLException {
+        List<Map<String, Object>> seats = new ArrayList<>();
+        while (rs.next()) {
+            Map<String, Object> seat = new HashMap<>();
+            seat.put("seat_id", rs.getInt("seat_id"));
+            seat.put("row_number", rs.getInt("row_number"));
+            seat.put("seat_number", rs.getInt("seat_number"));
+            seat.put("status", rs.getString("status"));
+            seats.add(seat);
+        }
+        return seats;
+    }
+
+    public void addSeatToCart(int seatId, double price) {
+        Map<String, Object> cartItem = new HashMap<>();
+        cartItem.put("type", "ticket");
+        cartItem.put("seat_id", seatId);
+        cartItem.put("price", price);
+        shoppingCart.add(cartItem);
+    }
+
+    // Stage 4: Additional Products
+    public List<Map<String, Object>> getAvailableProducts() throws SQLException {
+        String query = "SELECT product_id, name, price, stock_quantity, image_url FROM Products";
+        try (PreparedStatement stmt = dbConnection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            return mapProductsResultSet(rs);
+        }
+    }
+
+    private List<Map<String, Object>> mapProductsResultSet(ResultSet rs) throws SQLException {
+        List<Map<String, Object>> products = new ArrayList<>();
+        while (rs.next()) {
+            Map<String, Object> product = new HashMap<>();
+            product.put("product_id", rs.getInt("product_id"));
+            product.put("name", rs.getString("name"));
+            product.put("price", rs.getDouble("price"));
+            product.put("stock_quantity", rs.getInt("stock_quantity"));
+            product.put("image_url", rs.getString("image_url"));
+            products.add(product);
+        }
+        return products;
+    }
+
+    public void addProductToCart(int productId, int quantity, double price) {
+        Map<String, Object> cartItem = new HashMap<>();
+        cartItem.put("type", "product");
+        cartItem.put("product_id", productId);
+        cartItem.put("quantity", quantity);
+        cartItem.put("price", price);
+        shoppingCart.add(cartItem);
+    }
+
+    // Stage 5: Payment and Ticket Generation
+    public boolean processPayment(double totalAmount) {
+        // Simulate payment processing logic (e.g., cash payment)
+        return true;  // Assume payment is always successful for now
+    }
+
+    public Map<String, String> generateTicketAndInvoice() {
+        // Simulate ticket and invoice generation
+        Map<String, String> result = new HashMap<>();
+        result.put("ticket", "Generated Ticket");
+        result.put("invoice", "Generated Invoice");
+        return result;
+    }
+
+    public void clearShoppingCart() {
+        shoppingCart.clear();
+    }
+}
