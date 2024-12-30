@@ -27,7 +27,7 @@ public class LoginView extends Application {
         loginButton.setOnAction(event -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            if (loginController.getUser(username, password) != null) {
+            if (loginController.getAuthenticatedUser(username, password) != null) {
                 openMenu(primaryStage);
             } else {
                 System.out.println("Invalid credentials");

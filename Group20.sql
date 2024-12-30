@@ -10,6 +10,6 @@ CREATE TABLE users (
 );
 
 INSERT INTO users (username, password, role) VALUES
-('cashier1', 'cashier1', 'cashier'),
-('admin1', 'admin1', 'admin'),
-('manager1', 'manager1', 'manager');
+('cashier1', '$2a$12$bg8YICXCIZEDOwkLH8r7aunb1cvwodIeXdeHSxIHxvEM5Ab4fSzXm', 'cashier'), -- Password: cashier1
+('admin1', '$2a$12$8P4xr1QnXcpd3Rv1xDusSeWemcVPFKoeYXCSjAwVAZcvHABHdHZQi', 'admin'), -- Password: admin1
+('manager1', '$2a$12$mJXc2Ta8vuApvOXdV1eDNuff.MqAZ5Gi8NNqNCjmV29.s14n.QVmC', 'manager'); -- Password: manager1
