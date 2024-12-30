@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane prefHeight="400" prefWidth="600" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.SplashController">
+    <ImageView fx:id="logo1" fitHeight="200" fitWidth="200" opacity="0">
+        <image>
+            <Image url="@/com/example/images/logo1.png"  />
+        </image>
+    </ImageView>
+    <ImageView fx:id="logo2" fitHeight="200" fitWidth="200" opacity="0">
+        <image>
+            <Image url="@/com/example/images/logo2.png" />
+        </image>
+    </ImageView>
+    <ImageView fx:id="logo3" fitHeight="200" fitWidth="200" opacity="0">
+        <image>
+            <Image url="@/com/example/images/logo3.png" />
+        </image>
+    </ImageView>
+    <Label fx:id="welcomeLabel" ellipsisString="" prefHeight="182.0" prefWidth="297.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Welcome to the Cinema App" textAlignment="CENTER" opacity="0">
+        <font>
+            <Font name="Avenir Heavy" size="72.0" />
+        </font>
+    </Label>
+</StackPane>

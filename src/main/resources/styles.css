@@ -1,0 +1,27 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #e6e6e6);
+}
+@font-face {
+    font-family: "Lato";
+    src: url("fonts/Lato/Lato-Black.ttf");
+}
+.text-field, .password-field {
+    -fx-font-size: 14px;
+    -fx-border-color: #d0d0d0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+.button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+.button:hover {
+    -fx-background-color: #45a049;
+}
+.button:pressed {
+    -fx-background-color: #4a44b8;
+}
