@@ -25,3 +25,23 @@
 .button:pressed {
     -fx-background-color: #4a44b8;
 }
+
+/* General GridPane background */
+.root {
+    -fx-background-color: #ECEFF1;
+}
+
+/* Labels styling */
+.label {
+    -fx-text-fill: #333;
+    -fx-font-family: "Arial";
+}
+
+/* Button hover effect */
+#loginButton {
+    -fx-cursor: hand;
+}
+
+#loginButton:hover {
+    -fx-background-color: #45A049;
+}

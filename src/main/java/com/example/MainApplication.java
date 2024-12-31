@@ -1,7 +1,6 @@
 package com.example;
 
 import com.example.controller.SplashController;
-import com.example.view.LoginView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,22 +16,22 @@ public class MainApplication extends Application {
             Scene splashScene = new Scene(splashRoot);
 
             primaryStage.setScene(splashScene);
-            primaryStage.setTitle("Splash Screen");
+            primaryStage.setTitle("Cinema Application");
             primaryStage.show();
 
             SplashController splashController = loader.getController();
-            splashController.playAnimation(() -> {
-                showLoginScreen(primaryStage);
-            });
+            splashController.playAnimation(() -> showLoginScreen(primaryStage));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     private void showLoginScreen(Stage primaryStage) {
         try {
-            // Load the login screen
-            LoginView loginScreen = new LoginView();
-            loginScreen.start(primaryStage);
+            FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/com/example/login.fxml"));
+            Scene loginScene = new Scene(loginLoader.load());
+
+            primaryStage.setScene(loginScene);
+            primaryStage.setTitle("Login - Cinema Application");
         } catch (Exception e) {
             e.printStackTrace();
         }

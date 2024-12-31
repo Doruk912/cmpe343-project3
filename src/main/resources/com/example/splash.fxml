@@ -22,7 +22,7 @@
             <Image url="@/com/example/images/logo3.png" />
         </image>
     </ImageView>
-    <Label fx:id="welcomeLabel" ellipsisString="" prefHeight="182.0" prefWidth="297.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Welcome to the Cinema App" textAlignment="CENTER" opacity="0">
+    <Label fx:id="welcomeLabel" ellipsisString="" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Welcome to the Cinema App" textAlignment="CENTER" wrapText="true" opacity="0">
         <font>
             <Font name="Avenir Heavy" size="72.0" />
         </font>
