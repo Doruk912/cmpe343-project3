@@ -4,8 +4,11 @@ import com.example.controller.SplashController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 public class MainApplication extends Application {
     @Override
@@ -17,6 +20,7 @@ public class MainApplication extends Application {
 
             primaryStage.setScene(splashScene);
             primaryStage.setTitle("Cinema Application");
+            primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/images/logo3.png"))));
             primaryStage.show();
 
             SplashController splashController = loader.getController();
