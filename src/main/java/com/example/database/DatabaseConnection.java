@@ -57,4 +57,20 @@ public class DatabaseConnection {
         return movies;
     }
 
+    public boolean addMovie(Movie movie) {
+        String query = "INSERT INTO movies (title, genre, summary) VALUES (?, ?, ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, movie.getTitle());
+            preparedStatement.setString(2, movie.getGenre());
+            preparedStatement.setString(3, movie.getSummary());
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while adding the movie");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 }
