@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.CashierMenuController">
+
+    
+    <top>
+        <HBox spacing="10" alignment="CENTER" style="-fx-background-color: #2c3e50; -fx-padding: 10;">
+            <Label text="Cashier Menu" style="-fx-font-size: 20; -fx-text-fill: white;" />
+        </HBox>
+    </top>
+
+
+    <left>
+        <VBox spacing="15" style="-fx-background-color: #ecf0f1; -fx-padding: 15;">
+            <Button text="Search Movies" fx:id="searchMoviesButton" prefWidth="150" />
+            <Button text="Select Details" fx:id="selectDetailsButton" prefWidth="150" />
+            <Button text="Seat Selection" fx:id="seatSelectionButton" prefWidth="150" />
+            <Button text="Add Products" fx:id="addProductsButton" prefWidth="150" />
+            <Button text="Checkout" fx:id="checkoutButton" prefWidth="150" />
+            <Button text="Logout" fx:id="logoutButton" prefWidth="150" />
+        </VBox>
+    </left>
+
+
+    <center>
+        <StackPane>
+
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="Welcome to the Cinema Cashier System" style="-fx-font-size: 16;" />
+                <Text fx:id="instructionText" text="Please select an option from the menu." />
+            </VBox>
+        </StackPane>
+    </center>
+
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-background-color: #2c3e50; -fx-padding: 10;">
+            <Label text="Cinema Management System © 2024" style="-fx-text-fill: white;" />
+        </HBox>
+    </bottom>
+</BorderPane>
