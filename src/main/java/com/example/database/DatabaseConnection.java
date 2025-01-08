@@ -74,4 +74,20 @@ public class DatabaseConnection {
     }
 
 
+    public boolean updateMovie(String title, Movie movie) {
+        String query = "UPDATE movies SET title = ?, genre = ?, poster = ?, summary = ? WHERE title = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, movie.getTitle());
+            preparedStatement.setString(2, movie.getGenre());
+            preparedStatement.setString(3, movie.getPoster());
+            preparedStatement.setString(4, movie.getSummary());
+            preparedStatement.setString(5, title);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while updating the movie");
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

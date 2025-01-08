@@ -145,6 +145,70 @@ public class AdminMenuController {
         selectedPoster.setImage(null);
     }
 
+    public void onUpdateMovie(ActionEvent actionEvent) {
+        Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
+        if (selectedMovie == null) {
+            showAlert("No Movie Selected", "Please select a movie to update.");
+            return;
+        }
+
+        Dialog<Movie> dialog = new Dialog<>();
+        dialog.setTitle("Update Movie");
+        dialog.setHeaderText("Update movie details:");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField titleField = new TextField(selectedMovie.getTitle());
+        TextField genreField = new TextField(selectedMovie.getGenre());
+        TextField posterField = new TextField(selectedMovie.getPoster());
+        TextArea summaryArea = new TextArea(selectedMovie.getSummary());
+        summaryArea.setWrapText(true);
+
+        grid.add(new Label("Title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("Genre:"), 0, 1);
+        grid.add(genreField, 1, 1);
+        grid.add(new Label("Poster URL:"), 0, 2);
+        grid.add(posterField, 1, 2);
+        grid.add(new Label("Summary:"), 0, 3);
+        grid.add(summaryArea, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                String title = titleField.getText().trim();
+                String genre = genreField.getText().trim();
+                String poster = posterField.getText().trim();
+                String summary = summaryArea.getText().trim();
+
+                if (!title.isEmpty() && !genre.isEmpty() && !poster.isEmpty() && !summary.isEmpty()) {
+                    if (!isValidImage(poster)) {
+                        showAlert("Image Not Found", "The image at the provided URL could not be loaded.");
+                        return null;
+                    }
+                    return new Movie(title, genre, poster, summary);
+                } else {
+                    showAlert("Invalid Input", "All fields must be filled.");
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(movie -> {
+            DatabaseConnection db = new DatabaseConnection();
+            if (db.updateMovie(selectedMovie.getTitle(), movie)) {
+                movieList.set(movieList.indexOf(selectedMovie), movie);
+                showInfo("Success", "Movie updated successfully!");
+            } else {
+                showAlert("Error", "Failed to update the movie.");
+            }
+        });
+    }
+
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -159,9 +223,6 @@ public class AdminMenuController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
-    }
-
-    public void onUpdateMovie(ActionEvent actionEvent) {
     }
 
     private boolean isValidImage(String url) {
