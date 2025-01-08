@@ -1,9 +1,12 @@
 package com.example.database;
 
+import com.example.model.Movie;
 import com.example.model.Role;
 import com.example.model.User;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseConnection {
 
@@ -32,4 +35,26 @@ public class DatabaseConnection {
         }
         return user;
     }
+
+    public List<Movie> getAllMovies() {
+        String query = "SELECT * FROM movies";  // Assuming table name is 'movies'
+        List<Movie> movies = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String title = resultSet.getString("title");
+                String genre = resultSet.getString("genre");
+                String summary = resultSet.getString("summary");
+                String poster = resultSet.getString("poster");
+                movies.add(new Movie(title, genre, summary, poster));
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred while getting the movies");
+            e.printStackTrace();
+        }
+        return movies;
+    }
+
 }

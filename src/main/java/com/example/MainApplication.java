@@ -59,15 +59,15 @@ public class MainApplication extends Application {
         switch (user.getRole()) {
             case CASHIER:
                 fxmlPath = "/com/example/CashierMenu.fxml";
-                title = "Cashier Menu";
+                title = "Cinema Center - Cashier Menu";
                 break;
             case ADMIN:
                 fxmlPath = "/com/example/AdminMenu.fxml";
-                title = "Admin Menu";
+                title = "Cinema Center - Admin Menu";
                 break;
             case MANAGER:
                 fxmlPath = "/com/example/ManagerMenu.fxml";
-                title = "Manager Menu";
+                title = "Cinema Center - Manager Menu";
                 break;
             default:
                 showError("Role Error", "Invalid user role: " + user.getRole());
