@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.AdminMenuController"
+          alignment="center" hgap="20" vgap="20" styleClass="root">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    <VBox alignment="center" spacing="20">
+        <Button fx:id="addMovieButton" text="Add New Movie" onAction="#handleAddMovie" />
+        <Button fx:id="updateMovieButton" text="Update Movie Details" onAction="#handleUpdateMovie" />
+        <Button fx:id="createScheduleButton" text="Create/Update Monthly Schedule" onAction="#handleCreateSchedule" />
+        <Button fx:id="processCancellationsButton" text="Process Cancellations and Refunds" onAction="#handleProcessCancellations" />
+    </VBox>
+</GridPane>
