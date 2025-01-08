@@ -84,14 +84,7 @@ public class AdminMenuController {
 
     @FXML
     private void onAddMovie() {
-        Movie newMovie = new Movie(
-                titleField.getText(),
-                genreField.getText(),
-                summaryArea.getText(),
-                posterField.getText()
-        );
-        movieList.add(newMovie);
-        clearFields();
+
     }
 
     @FXML

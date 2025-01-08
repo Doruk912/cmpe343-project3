@@ -5,8 +5,14 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.AdminMenuController">
     <top>
-        <Label text="Cinema Admin Menu" style="-fx-font-size: 24px; -fx-font-weight: bold;" alignment="CENTER" />
+        <HBox alignment="CENTER" style="-fx-padding: 10;">
+            <Label text="Cinema Admin Menu" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+        </HBox>
     </top>
+    <left>
+        <VBox style="-fx-padding: 10 0 10 10;">
+        </VBox>
+    </left>
 
     <center>
         <TableView fx:id="movieTable" prefHeight="400" prefWidth="600">
@@ -36,7 +42,8 @@
             <Label text="Genre:" />
             <TextField fx:id="genreField" promptText="Genre" />
             <Label text="Summary:" />
-            <TextArea fx:id="summaryArea" promptText="Summary" prefHeight="100" />
+            <TextArea fx:id="summaryArea" promptText="Summary" prefHeight="100" wrapText="true" style="-fx-pref-width: 300;" />
+
             <Button fx:id="saveChangesButton" text="Save Changes" onAction="#onSaveChanges" />
         </VBox>
     </right>
