@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.AdminMenuController">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.example.controller.AdminMenuController">
     <top>
         <HBox alignment="CENTER" style="-fx-padding: 10;">
-            <Label text="Cinema Admin Menu" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Cinema Admin Menu" />
         </HBox>
     </top>
     <left>
@@ -17,24 +24,24 @@
     <center>
         <TableView fx:id="movieTable" prefHeight="400" prefWidth="600">
             <columns>
-                <TableColumn fx:id="titleColumn" text="Title" prefWidth="150" />
-                <TableColumn fx:id="posterColumn" text="Poster" prefWidth="100"/>
-                <TableColumn fx:id="genreColumn" text="Genre" prefWidth="100" />
-                <TableColumn fx:id="summaryColumn" text="Summary" prefWidth="250" />
+                <TableColumn fx:id="titleColumn" prefWidth="150" text="Title" />
+                <TableColumn fx:id="posterColumn" prefWidth="100" text="Poster" />
+                <TableColumn fx:id="genreColumn" prefWidth="100" text="Genre" />
+                <TableColumn fx:id="summaryColumn" prefWidth="250" text="Summary" />
             </columns>
         </TableView>
     </center>
 
     <bottom>
-        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
-            <Button fx:id="addMovieButton" text="Add New Movie" onAction="#onAddMovie" />
-            <Button fx:id="updateMovieButton" text="Update Selected Movie" onAction="#onUpdateMovie" />
+        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+            <Button fx:id="addMovieButton" onAction="#onAddMovie" text="Add New Movie" />
+            <Button fx:id="updateMovieButton" onAction="#onUpdateMovie" text="Update Selected Movie" />
         </HBox>
     </bottom>
 
     <right>
-        <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
-            <Label text="Selected Movie Details" style="-fx-font-weight: bold;" />
+        <VBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+            <Label style="-fx-font-weight: bold;" text="Selected Movie Details" />
             <Label text="Title:" />
             <TextField fx:id="titleField" promptText="Movie Title" />
             <Label text="Poster URL:" />
@@ -42,9 +49,9 @@
             <Label text="Genre:" />
             <TextField fx:id="genreField" promptText="Genre" />
             <Label text="Summary:" />
-            <TextArea fx:id="summaryArea" promptText="Summary" prefHeight="100" wrapText="true" style="-fx-pref-width: 300;" />
+            <TextArea fx:id="summaryArea" prefHeight="100" promptText="Summary" style="-fx-pref-width: 300;" wrapText="true" />
 
-            <Button fx:id="saveChangesButton" text="Save Changes" onAction="#onSaveChanges" />
+            <Button fx:id="saveChangesButton" onAction="#onSaveChanges" text="Save Changes" />
         </VBox>
     </right>
 </BorderPane>
