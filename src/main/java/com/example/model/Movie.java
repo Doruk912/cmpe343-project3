@@ -4,10 +4,10 @@ public class Movie {
 
     private String title;
     private String genre;
-    private String summary;
     private String poster;
+    private String summary;
 
-    public Movie(String title, String genre, String summary, String poster) {
+    public Movie(String title, String genre, String poster, String summary) {
         this.title = title;
         this.genre = genre;
         this.summary = summary;

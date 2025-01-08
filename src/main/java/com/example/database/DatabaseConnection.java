@@ -46,9 +46,9 @@ public class DatabaseConnection {
             while (resultSet.next()) {
                 String title = resultSet.getString("title");
                 String genre = resultSet.getString("genre");
-                String summary = resultSet.getString("summary");
                 String poster = resultSet.getString("poster");
-                movies.add(new Movie(title, genre, summary, poster));
+                String summary = resultSet.getString("summary");
+                movies.add(new Movie(title, genre, poster, summary));
             }
         } catch (SQLException e) {
             System.out.println("An error occurred while getting the movies");
@@ -58,12 +58,13 @@ public class DatabaseConnection {
     }
 
     public boolean addMovie(Movie movie) {
-        String query = "INSERT INTO movies (title, genre, summary) VALUES (?, ?, ?)";
+        String query = "INSERT INTO movies (title, genre, poster, summary) VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, movie.getTitle());
             preparedStatement.setString(2, movie.getGenre());
-            preparedStatement.setString(3, movie.getSummary());
+            preparedStatement.setString(3, movie.getPoster());
+            preparedStatement.setString(4, movie.getSummary());
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("An error occurred while adding the movie");
