@@ -8,15 +8,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.util.function.Consumer;
+
 public class LoginController {
 
     @FXML
     private TextField usernameField;
+
     @FXML
     private PasswordField passwordField;
+
     @FXML
     private Button loginButton;
+
     private final DatabaseConnection db = new DatabaseConnection();
+    private Consumer<User> onLoginSuccess;
 
     @FXML
     private void handleLogin() {
@@ -34,8 +40,13 @@ public class LoginController {
             return;
         }
 
-        showInfo("Login Successful", "Welcome, " + user.getUsername() + "!");
-        // Proceed to the next screen or application logic.
+        if(onLoginSuccess != null) {
+            onLoginSuccess.accept(user);
+        }
+    }
+
+    public void setOnLoginSuccess(Consumer<User> onLoginSuccess) {
+        this.onLoginSuccess = onLoginSuccess;
     }
 
     private void showError(String title, String message) {
@@ -52,14 +63,6 @@ public class LoginController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    public User getAuthenticatedUser(String username, String password) {
-        User user = db.getUser(username);
-        if(user != null && verifyPassword(password, user.getPassword())) {
-            return user;
-        }
-        return null;
     }
 
     private String hashPassword(String password) {

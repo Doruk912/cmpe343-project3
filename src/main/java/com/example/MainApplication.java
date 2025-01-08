@@ -1,6 +1,8 @@
 package com.example;
 
+import com.example.controller.LoginController;
 import com.example.controller.SplashController;
+import com.example.model.User;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,7 @@ public class MainApplication extends Application {
             primaryStage.setScene(splashScene);
             primaryStage.setTitle("Cinema Application");
             primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/images/logo3.png"))));
+            primaryStage.setResizable(false);
             primaryStage.show();
 
             SplashController splashController = loader.getController();
@@ -33,24 +36,59 @@ public class MainApplication extends Application {
         }
     }
 
+    private void showLoginScreen(Stage primaryStage) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/login.fxml"));
+            Parent loginRoot = loader.load();
+            Scene loginScene = new Scene(loginRoot);
+
+            primaryStage.setScene(loginScene);
+            primaryStage.setTitle("Cinema Application Login");
+            primaryStage.show();
+
+            LoginController loginController = loader.getController();
+            loginController.setOnLoginSuccess(user -> handleRoleSpecificMenu(primaryStage, user));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleRoleSpecificMenu(Stage stage, User user){
+        String fxmlPath;
+        String title;
+        switch (user.getRole()) {
+            case CASHIER:
+                fxmlPath = "/com/example/CashierMenu.fxml";
+                title = "Cashier Menu";
+                break;
+            case ADMIN:
+                fxmlPath = "/com/example/AdminMenu.fxml";
+                title = "Admin Menu";
+                break;
+            case MANAGER:
+                fxmlPath = "/com/example/ManagerMenu.fxml";
+                title = "Manager Menu";
+                break;
+            default:
+                showError("Role Error", "Invalid user role: " + user.getRole());
+                return;
+        }
+        showScene(stage, fxmlPath, title);
+    }
+
     private void showScene(Stage primaryStage, String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();  // Use Parent instead of StackPane or GridPane
+            Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle(title);
-            primaryStage.setResizable(false);  // Make the window non-resizable
-            primaryStage.centerOnScreen();    // Center window on screen
+            primaryStage.centerOnScreen();
             primaryStage.show();
         } catch (Exception e) {
             showError("Scene Error", "Failed to load the scene: " + fxmlPath);
             e.printStackTrace();
         }
-    }
-
-    private void showLoginScreen(Stage primaryStage) {
-        showScene(primaryStage, "/com/example/login.fxml", "Login - Cinema Application");
     }
 
     private void showError(String title, String message) {
