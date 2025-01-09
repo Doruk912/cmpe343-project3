@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.ManagerMenuController" style="-fx-background-color: #f0f0f0;" prefWidth="600" prefHeight="400">
+    <top>
+        <StackPane style="-fx-padding: 20; -fx-background-color: #2c3e50;">
+            <Label text="Cinema Center Admin Menu" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" StackPane.alignment="CENTER" />
+        </StackPane>
+    </top>
+    <center>
+        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 40;">
+            <Button text="Manage Inventory" onAction="#handleManageInventory" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+            <Button text="Manage Personnel" onAction="#handleManagePersonnel" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+            <Button text="Edit Product Prices" onAction="#handleEditPrices" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+            <Button text="Logout" onAction="#onLogout" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+        </VBox>
+    </center>
+    <bottom>
+        <BorderPane style="-fx-padding: 10; -fx-background-color: #2c3e50;">
+            <right>
+                <Label fx:id="usernameLabel" text="Logged in as: " style="-fx-font-size: 12px; -fx-text-fill: white; -fx-padding: 0 20 0 0;" />
+            </right>
+        </BorderPane>
+    </bottom>
+</BorderPane>
