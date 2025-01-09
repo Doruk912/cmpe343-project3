@@ -2,6 +2,7 @@ package com.example;
 
 import com.example.controller.AdminMenuController;
 import com.example.controller.LoginController;
+import com.example.controller.ManagerMenuController;
 import com.example.controller.SplashController;
 import com.example.model.User;
 import javafx.application.Application;
@@ -89,6 +90,9 @@ public class MainApplication extends Application {
 
             if (fxmlPath.equals("/com/example/AdminMenu.fxml")) {
                 AdminMenuController controller = loader.getController();
+                controller.setUsername(username);
+            }else if (fxmlPath.equals("/com/example/ManagerMenu.fxml")) {
+                ManagerMenuController controller = loader.getController();
                 controller.setUsername(username);
             }
         } catch (Exception e) {

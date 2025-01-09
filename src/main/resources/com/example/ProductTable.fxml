@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.ProductTableController" spacing="10" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f0f0f0;">
+    <Label text="Product Inventory" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10;" />
+    <TableView fx:id="productTable" prefWidth="500" style="-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1;">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="200" />
+            <TableColumn fx:id="priceColumn" text="Price" prefWidth="100" />
+            <TableColumn fx:id="quantityColumn" text="Quantity" prefWidth="100" />
+        </columns>
+    </TableView>
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Add Product" onAction="#handleAddProduct" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+        <Button text="Edit Product" onAction="#handleEditProduct" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+        <Button text="Delete Product" onAction="#handleDeleteProduct" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+    </HBox>
+    <Button text="Close" onAction="#handleClose" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+</VBox>
