@@ -28,6 +28,16 @@ public class ManagerMenuController {
     }
 
     public void handleManagePersonnel(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/PersonnelTable.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Personnel List");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleEditPrices(ActionEvent actionEvent) {

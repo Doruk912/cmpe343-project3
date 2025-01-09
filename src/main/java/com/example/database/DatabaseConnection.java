@@ -29,7 +29,7 @@ public class DatabaseConnection {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                user = new User(resultSet.getInt("id"), resultSet.getString("username"), resultSet.getString("password"), Role.valueOf(resultSet.getString("role")));
+                user = new User(resultSet.getInt("id"), resultSet.getString("username"), resultSet.getString("name"), resultSet.getString("password"), Role.valueOf(resultSet.getString("role")));
             }
         } catch (SQLException e) {
             System.out.println("An error occurred while getting the user");
@@ -156,5 +156,27 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<User> getAllUsers() {
+        String query = "SELECT * FROM users";
+        List<User> users = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String username = resultSet.getString("username");
+                String name = resultSet.getString("name");
+                String password = resultSet.getString("password");
+                Role role = Role.valueOf(resultSet.getString("role"));
+                users.add(new User(id, username, name, password, role));
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred while getting the users");
+            e.printStackTrace();
+        }
+        return users;
     }
 }
