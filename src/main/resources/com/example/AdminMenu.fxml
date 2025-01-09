@@ -7,9 +7,13 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.AdminMenuController">
     <top>
-        <HBox alignment="CENTER" style="-fx-padding: 10;">
-            <Label text="Cinema Admin Menu" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-        </HBox>
+        <StackPane style="-fx-padding: 10;">
+            <Label text="Cinema Center Admin Menu" style="-fx-font-size: 24px; -fx-font-weight: bold;" StackPane.alignment="CENTER" />
+            <HBox alignment="CENTER_RIGHT" spacing="10" StackPane.alignment="TOP_RIGHT">
+                <Label fx:id="usernameLabel" text="Username: admin" />
+                <Button text="Logout" onAction="#onLogout" />
+            </HBox>
+        </StackPane>
     </top>
 
     <left>

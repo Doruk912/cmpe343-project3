@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.controller.AdminMenuController;
 import com.example.controller.LoginController;
 import com.example.controller.SplashController;
 import com.example.model.User;
@@ -36,7 +37,7 @@ public class MainApplication extends Application {
         }
     }
 
-    private void showLoginScreen(Stage primaryStage) {
+    public void showLoginScreen(Stage primaryStage) {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/login.fxml"));
             Parent loginRoot = loader.load();
@@ -73,10 +74,10 @@ public class MainApplication extends Application {
                 showError("Role Error", "Invalid user role: " + user.getRole());
                 return;
         }
-        showScene(stage, fxmlPath, title);
+        showScene(stage, fxmlPath, title, user.getUsername());
     }
 
-    private void showScene(Stage primaryStage, String fxmlPath, String title) {
+    private void showScene(Stage primaryStage, String fxmlPath, String title, String username) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
@@ -85,6 +86,11 @@ public class MainApplication extends Application {
             primaryStage.setTitle(title);
             primaryStage.centerOnScreen();
             primaryStage.show();
+
+            if (fxmlPath.equals("/com/example/AdminMenu.fxml")) {
+                AdminMenuController controller = loader.getController();
+                controller.setUsername(username);
+            }
         } catch (Exception e) {
             showError("Scene Error", "Failed to load the scene: " + fxmlPath);
             e.printStackTrace();

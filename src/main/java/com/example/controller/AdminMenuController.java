@@ -1,9 +1,13 @@
 package com.example.controller;
 
+import com.example.MainApplication;
 import com.example.database.DatabaseConnection;
 import com.example.model.Movie;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,10 +15,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class AdminMenuController {
+
+    @FXML
+    private Label usernameLabel;
 
     @FXML
     private TableView<Movie> movieTable;
@@ -27,9 +37,6 @@ public class AdminMenuController {
 
     @FXML
     private TableColumn<Movie, String> summaryColumn;
-
-    @FXML
-    private TableColumn<Movie, String> posterColumn;
 
     @FXML
     private Label selectedTitle;
@@ -232,5 +239,14 @@ public class AdminMenuController {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public void setUsername(String username) {
+        usernameLabel.setText("Logged in as: " + username);
+    }
+
+    public void onLogout(ActionEvent actionEvent) {
+        MainApplication app = new MainApplication();
+        app.showLoginScreen((Stage) usernameLabel.getScene().getWindow());
     }
 }
