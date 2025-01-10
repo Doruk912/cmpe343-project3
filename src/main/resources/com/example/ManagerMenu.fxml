@@ -13,7 +13,7 @@
         <VBox spacing="20" alignment="CENTER" style="-fx-padding: 40;">
             <Button text="Manage Inventory" onAction="#handleManageInventory" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
             <Button text="Manage Personnel" onAction="#handleManagePersonnel" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
-            <Button text="Edit Product Prices" onAction="#handleEditPrices" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
+            <Button text="Edit Ticket Prices" onAction="#handleEditPrices" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
             <Button text="Logout" onAction="#onLogout" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20;" />
         </VBox>
     </center>

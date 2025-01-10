@@ -25,6 +25,11 @@ CREATE TABLE products (
     quantity INT UNSIGNED
 );
 
+CREATE TABLE prices (
+	ticket DECIMAL(6,2),
+    discount DECIMAL(5,2)
+);
+
 INSERT INTO users (username, name, password, role) VALUES
 ('cashier1', 'John Doe', '$2a$12$bg8YICXCIZEDOwkLH8r7aunb1cvwodIeXdeHSxIHxvEM5Ab4fSzXm', 'cashier'), -- Password: cashier1
 ('admin1', 'Jane Smith', '$2a$12$8P4xr1QnXcpd3Rv1xDusSeWemcVPFKoeYXCSjAwVAZcvHABHdHZQi', 'admin'), -- Password: admin1
@@ -46,3 +51,6 @@ INSERT INTO products (name, price, quantity) VALUES
 ('Coca-Cola', 50, 500),
 ('Sprite', 50, 500),
 ('3D Glasses', 9.50, 1000);
+
+INSERT INTO prices (ticket, discount) VALUES
+('200', '50');

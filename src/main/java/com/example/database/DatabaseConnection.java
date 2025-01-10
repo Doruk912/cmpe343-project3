@@ -242,4 +242,50 @@ public class DatabaseConnection {
         }
         return genres;
     }
+
+    public BigDecimal getTicketPrice() {
+        String query = "SELECT ticket FROM prices";
+        try (Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getBigDecimal("ticket");
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred while getting the ticket price");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public BigDecimal getDiscountRate() {
+        String query = "SELECT discount FROM prices";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getBigDecimal("discount");
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred while getting the discount rate");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean updatePrices(BigDecimal newTicketPrice, BigDecimal newDiscountRate) {
+        String query = "UPDATE prices SET ticket = ?, discount = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setBigDecimal(1, newTicketPrice);
+            preparedStatement.setBigDecimal(2, newDiscountRate);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while updating the prices");
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
