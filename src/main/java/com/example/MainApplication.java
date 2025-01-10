@@ -91,6 +91,9 @@ public class MainApplication extends Application {
             }else if (fxmlPath.equals("/com/example/ManagerMenu.fxml")) {
                 ManagerMenuController controller = loader.getController();
                 controller.setUsername(username);
+            }else if (fxmlPath.equals("/com/example/CashierMenu.fxml")) {
+                CashierMenuController controller = loader.getController();
+                controller.setUsername(username);
             }
         } catch (Exception e) {
             showError("Scene Error", "Failed to load the scene: " + fxmlPath);
