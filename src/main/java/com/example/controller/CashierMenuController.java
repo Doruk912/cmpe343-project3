@@ -12,14 +12,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CashierMenuController {
     public Label usernameLabel;
     public ListView<Movie> movieListView;
-    public ComboBox<String> dateComboBox;
+    public DatePicker datePicker;
     public ComboBox<String> sessionComboBox;
     public TextField searchTextField;
     public ComboBox<String> genreComboBox;
@@ -33,6 +37,7 @@ public class CashierMenuController {
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> filterMoviesByTitle(newValue));
         genreComboBox.valueProperty().addListener((observable, oldValue, newValue) -> filterMovies());
         loadGenres();
+        configureDatePicker();
     }
 
     private void loadMovies() {
@@ -65,6 +70,35 @@ public class CashierMenuController {
                 .filter(movie -> genre.equals("All") || movie.getGenre().equalsIgnoreCase(genre))
                 .collect(Collectors.toList());
         movieListView.setItems(FXCollections.observableArrayList(filteredMovies));
+    }
+
+    private void configureDatePicker() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    try {
+                        return LocalDate.parse(string, dateFormatter);
+                    } catch (DateTimeParseException e) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+        });
+
+        datePicker.setPromptText("dd/MM/yyyy");
     }
 
     public void onLogout(ActionEvent actionEvent) {

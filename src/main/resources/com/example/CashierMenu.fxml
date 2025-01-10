@@ -12,6 +12,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.DatePicker?>
 <BorderPane prefHeight="528.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.example.controller.CashierMenuController">
 
     <top>
@@ -37,7 +38,7 @@
 
             <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 1;" HBox.hgrow="SOMETIMES">
                 <Label text="Select Date" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
-                <ComboBox fx:id="dateComboBox" prefWidth="150.0" />
+                <DatePicker fx:id="datePicker" prefWidth="150.0" />
 
                 <Label text="Select Session" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                 <ComboBox fx:id="sessionComboBox" prefWidth="150.0" />
