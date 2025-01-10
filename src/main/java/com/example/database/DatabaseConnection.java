@@ -225,4 +225,21 @@ public class DatabaseConnection {
         }
         return false;
     }
+
+    public List<String> getAllGenres() {
+        String query = "SELECT DISTINCT genre FROM movies";
+        List<String> genres = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                genres.add(resultSet.getString("genre"));
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred while getting the genres");
+            e.printStackTrace();
+        }
+        return genres;
+    }
 }
