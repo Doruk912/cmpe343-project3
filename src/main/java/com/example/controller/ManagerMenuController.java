@@ -31,6 +31,10 @@ public class ManagerMenuController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/PersonnelTable.fxml"));
             Parent root = loader.load();
+
+            PersonnelTableController personnelTableController = loader.getController();
+            personnelTableController.setCurrentUser(usernameLabel.getText().replace("Logged in as: ", ""));
+
             Stage stage = new Stage();
             stage.setTitle("Personnel List");
             stage.setScene(new Scene(root));

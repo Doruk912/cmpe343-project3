@@ -179,4 +179,50 @@ public class DatabaseConnection {
         }
         return users;
     }
+
+    public boolean addUser(User user) {
+        String query = "INSERT INTO users (username, name, password, role) VALUES (?, ?, ?, ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getRole().name());
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while adding the user");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateUser(User user) {
+        String query = "UPDATE users SET username = ?, name = ?, password = ?, role = ? WHERE id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getRole().name());
+            preparedStatement.setInt(5, user.getId());
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while updating the user");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean removeUser(User selectedUser) {
+        String query = "DELETE FROM users WHERE id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, selectedUser.getId());
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while deleting the user");
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

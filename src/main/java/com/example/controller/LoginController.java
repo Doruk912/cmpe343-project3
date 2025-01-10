@@ -65,10 +65,6 @@ public class LoginController {
         alert.showAndWait();
     }
 
-    private String hashPassword(String password) {
-        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
-    }
-
     private boolean verifyPassword(String password, String hashedPassword) {
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedPassword);
         return result.verified;

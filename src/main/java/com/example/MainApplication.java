@@ -1,9 +1,6 @@
 package com.example;
 
-import com.example.controller.AdminMenuController;
-import com.example.controller.LoginController;
-import com.example.controller.ManagerMenuController;
-import com.example.controller.SplashController;
+import com.example.controller.*;
 import com.example.model.User;
 import javafx.application.Application;
 import javafx.application.Platform;
