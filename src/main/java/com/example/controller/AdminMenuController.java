@@ -249,4 +249,27 @@ public class AdminMenuController {
         MainApplication app = new MainApplication();
         app.showLoginScreen((Stage) usernameLabel.getScene().getWindow());
     }
+
+    public void onViewSchedule(ActionEvent actionEvent) {
+        Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
+        if (selectedMovie == null) {
+            showAlert("No Movie Selected", "Please select a movie.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/SessionTable.fxml"));
+            Parent root = loader.load();
+
+            ScheduleController scheduleController = loader.getController();
+            scheduleController.setSelectedMovie(selectedMovie);
+
+            Stage stage = new Stage();
+            stage.setTitle("Schedule");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

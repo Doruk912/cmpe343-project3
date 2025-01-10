@@ -4,10 +4,12 @@ import com.example.model.Movie;
 import com.example.model.Product;
 import com.example.model.Role;
 import com.example.model.User;
-import com.example.model.Schedule;
+import com.example.model.Session;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,11 +49,12 @@ public class DatabaseConnection {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
+                int id = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 String genre = resultSet.getString("genre");
                 String poster = resultSet.getString("poster");
                 String summary = resultSet.getString("summary");
-                movies.add(new Movie(title, genre, poster, summary));
+                movies.add(new Movie(id, title, genre, poster, summary));
             }
         } catch (SQLException e) {
             System.out.println("An error occurred while getting the movies");
@@ -289,15 +292,15 @@ public class DatabaseConnection {
         }
         return false;
     }
-    public List<Schedule> getSchedulesForMovie(int movieId) {
-        List<Schedule> schedules = new ArrayList<>();
+    public List<Session> getSchedulesForMovie(int movieId) {
+        List<Session> schedules = new ArrayList<>();
         String query = "SELECT * FROM schedule WHERE movie_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, movieId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                schedules.add(new Schedule(
+                schedules.add(new Session(
                         resultSet.getInt("id"),
                         resultSet.getInt("movie_id"),
                         resultSet.getDate("date").toLocalDate(),
@@ -311,7 +314,7 @@ public class DatabaseConnection {
         return schedules;
     }
 
-    public boolean addSchedule(Schedule schedule) {
+    public boolean addSchedule(Session schedule) {
         String query = "INSERT INTO schedule (movie_id, date, time, location) VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -326,4 +329,26 @@ public class DatabaseConnection {
         }
     }
 
+    public List<Session> getSessionsForMovie(int id) {
+        String query = "SELECT * FROM schedule WHERE movie_id = ?";
+        List<Session> sessions = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int sessionId = resultSet.getInt("id");
+                int movieId = resultSet.getInt("movie_id");
+                LocalDate date = resultSet.getDate("date").toLocalDate();
+                LocalTime time = resultSet.getTime("time").toLocalTime();
+                String location = resultSet.getString("location");
+                sessions.add(new Session(sessionId, movieId, date, time, location));
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred while getting the sessions");
+            e.printStackTrace();
+        }
+        return sessions;
+    }
 }

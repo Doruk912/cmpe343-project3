@@ -3,14 +3,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 
-public class Schedule {
+public class Session {
     private int id;
     private int movieId;
     private LocalDate date;
     private LocalTime time;
     private String location;
 
-    public Schedule(int id, int movieId, LocalDate date, LocalTime time, String location) {
+    public Session(int id, int movieId, LocalDate date, LocalTime time, String location) {
         this.id = id;
         this.movieId = movieId;
         this.date = date;
