@@ -11,6 +11,7 @@
 
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
 <BorderPane prefHeight="528.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.example.controller.CashierMenuController">
 
     <top>
@@ -25,13 +26,15 @@
 
     <center>
         <HBox spacing="10" style="-fx-padding: 20;">
-            <!-- Movie Selection VBox -->
             <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 1;" HBox.hgrow="ALWAYS">
                 <Label text="Select Movie" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
-                <ListView fx:id="movieListView" prefHeight="200.0" />
+                <HBox spacing="5">
+                    <TextField fx:id="searchTextField" promptText="Search by title" prefWidth="200.0" />
+                    <ComboBox fx:id="genreComboBox" promptText="Filter by genre" prefWidth="150.0" />
+                </HBox>
+                <ListView fx:id="movieListView" prefHeight="300.0" />
             </VBox>
 
-            <!-- Date and Session Selection VBox -->
             <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 1;" HBox.hgrow="SOMETIMES">
                 <Label text="Select Date" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                 <ComboBox fx:id="dateComboBox" prefWidth="150.0" />
@@ -43,7 +46,7 @@
     </center>
 
     <bottom>
-        <HBox alignment="BOTTOM_RIGHT" style="-fx-padding: 20;">
+        <HBox alignment="BOTTOM_RIGHT" style="-fx-padding: 0 20 20 20;">
             <Button text="Continue" onAction="#onContinue" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20;" />
         </HBox>
     </bottom>
