@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.AdminMenuController" style="-fx-background-color: #f0f0f0;" prefWidth="900" prefHeight="600">
+<BorderPane prefHeight="600" prefWidth="900" style="-fx-background-color: #f0f0f0;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.example.controller.AdminMenuController">
     <top>
         <StackPane style="-fx-padding: 20; -fx-background-color: #2c3e50;">
-            <Label text="Cinema Center Admin Menu" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" StackPane.alignment="CENTER" />
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" text="Cinema Center Admin Menu" StackPane.alignment="CENTER" />
             <HBox alignment="CENTER_RIGHT" spacing="10" StackPane.alignment="TOP_RIGHT">
-                <Label fx:id="usernameLabel" text="Username: admin" style="-fx-text-fill: white;" />
-                <Button text="Logout" onAction="#onLogout" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" />
+                <Label fx:id="usernameLabel" style="-fx-text-fill: white;" text="Username: admin" />
+                <Button onAction="#onLogout" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" text="Logout" />
             </HBox>
         </StackPane>
     </top>
@@ -25,14 +30,14 @@
         <HBox spacing="10" style="-fx-padding: 20;">
             <TableView fx:id="movieTable" prefWidth="600">
                 <columns>
-                    <TableColumn fx:id="titleColumn" text="Title" prefWidth="150" />
-                    <TableColumn fx:id="genreColumn" text="Genre" prefWidth="100" />
-                    <TableColumn fx:id="summaryColumn" text="Summary" prefWidth="345" />
+                    <TableColumn fx:id="titleColumn" prefWidth="150" text="Title" />
+                    <TableColumn fx:id="genreColumn" prefWidth="100" text="Genre" />
+                    <TableColumn fx:id="summaryColumn" prefWidth="345" text="Summary" />
                 </columns>
             </TableView>
 
-            <VBox spacing="10" prefWidth="300" style="-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1;">
-                <Label text="Selected Movie Details" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+            <VBox prefWidth="300" spacing="10" style="-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1;">
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Selected Movie Details" />
                 <VBox spacing="5">
                     <Label fx:id="selectedTitle" text="Title: " />
                     <Label fx:id="selectedGenre" text="Genre: " />
@@ -41,16 +46,17 @@
                             <ImageView fx:id="selectedPoster" fitHeight="200" fitWidth="150" preserveRatio="true" />
                         </center>
                     </BorderPane>
-                    <Label fx:id="selectedSummary" text="Summary: " wrapText="true" style="-fx-max-width: 280;" />
+                    <Label fx:id="selectedSummary" style="-fx-max-width: 280;" text="Summary: " wrapText="true" />
                 </VBox>
             </VBox>
         </HBox>
     </center>
 
     <bottom>
-        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #2c3e50;">
-            <Button fx:id="addMovieButton" text="Add New Movie" onAction="#onAddMovie" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" />
-            <Button fx:id="updateMovieButton" text="Update Selected Movie" onAction="#onUpdateMovie" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" />
+        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20; -fx-background-color: #2c3e50;">
+            <Button fx:id="addMovieButton" onAction="#onAddMovie" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" text="Add New Movie" />
+            <Button fx:id="updateMovieButton" onAction="#onUpdateMovie" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" text="Update Selected Movie" />
+         <Button mnemonicParsing="false" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" text="View Schedule" />
         </HBox>
     </bottom>
 

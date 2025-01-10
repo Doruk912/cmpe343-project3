@@ -30,6 +30,16 @@ CREATE TABLE prices (
     discount DECIMAL(5,2)
 );
 
+CREATE TABLE schedule
+(
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT          NOT NULL,
+    date     DATE         NOT NULL,
+    time     TIME         NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES movies (id)
+);
+
 INSERT INTO users (username, name, password, role) VALUES
 ('cashier1', 'John Doe', '$2a$12$bg8YICXCIZEDOwkLH8r7aunb1cvwodIeXdeHSxIHxvEM5Ab4fSzXm', 'cashier'), -- Password: cashier1
 ('admin1', 'Jane Smith', '$2a$12$8P4xr1QnXcpd3Rv1xDusSeWemcVPFKoeYXCSjAwVAZcvHABHdHZQi', 'admin'), -- Password: admin1
@@ -54,3 +64,10 @@ INSERT INTO products (name, price, quantity) VALUES
 
 INSERT INTO prices (ticket, discount) VALUES
 ('200', '50');
+
+INSERT INTO schedule (movie_id, date, time, location) VALUES
+(1, '2025-01-10', '18:00:00', 'Theater 1'),
+(1, '2025-01-10', '21:00:00', 'Theater 1'),
+(2, '2025-01-11', '17:30:00', 'Theater 2'),
+(3, '2025-01-12', '20:00:00', 'Theater 3'),
+(4, '2025-01-13', '15:00:00', 'Theater 4');

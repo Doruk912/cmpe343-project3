@@ -4,6 +4,7 @@ import com.example.model.Movie;
 import com.example.model.Product;
 import com.example.model.Role;
 import com.example.model.User;
+import com.example.model.Schedule;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -288,4 +289,41 @@ public class DatabaseConnection {
         }
         return false;
     }
+    public List<Schedule> getSchedulesForMovie(int movieId) {
+        List<Schedule> schedules = new ArrayList<>();
+        String query = "SELECT * FROM schedule WHERE movie_id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, movieId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                schedules.add(new Schedule(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("movie_id"),
+                        resultSet.getDate("date").toLocalDate(),
+                        resultSet.getTime("time").toLocalTime(),
+                        resultSet.getString("location")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return schedules;
+    }
+
+    public boolean addSchedule(Schedule schedule) {
+        String query = "INSERT INTO schedule (movie_id, date, time, location) VALUES (?, ?, ?, ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, schedule.getMovieId());
+            preparedStatement.setDate(2, Date.valueOf(schedule.getDate()));
+            preparedStatement.setTime(3, Time.valueOf(schedule.getTime()));
+            preparedStatement.setString(4, schedule.getLocation());
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
