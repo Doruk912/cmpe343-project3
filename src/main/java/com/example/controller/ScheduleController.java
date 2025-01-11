@@ -21,21 +21,24 @@ import java.util.List;
 public class ScheduleController {
 
     @FXML
-    public TableView<Session> scheduleTable;
+    private TableView<Session> scheduleTable;
 
     @FXML
-    public TableColumn<Session, Integer> idColumn;
+    private TableColumn<Session, Integer> idColumn;
 
     @FXML
-    public TableColumn<Session, String> locationColumn;
+    private TableColumn<Session, String> locationColumn;
 
     @FXML
-    public TableColumn<Session, Date> dateColumn;
+    private TableColumn<Session, Date> dateColumn;
 
     @FXML
-    public TableColumn<Session, Time> timeColumn;
+    private TableColumn<Session, Time> timeColumn;
 
     private final ObservableList<Session> sessionList = FXCollections.observableArrayList();
+
+    @FXML
+    private Label scheduleLabel;
 
     private Movie selectedMovie;
 
@@ -45,9 +48,6 @@ public class ScheduleController {
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
-
-        DatabaseConnection db = new DatabaseConnection();
-        //sessionList.setAll(db.getAllSessions());
     }
 
     public void handleAddSession(ActionEvent actionEvent) {
@@ -206,6 +206,7 @@ public class ScheduleController {
 
     public void setSelectedMovie(Movie movie) {
         this.selectedMovie = movie;
+        scheduleLabel.setText("Schedule for " + movie.getTitle());
         loadScheduleForMovie();
     }
 

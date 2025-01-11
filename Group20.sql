@@ -30,7 +30,7 @@ CREATE TABLE prices (
     discount DECIMAL(5,2)
 );
 
-CREATE TABLE schedule
+CREATE TABLE sessions
 (
     id       INT AUTO_INCREMENT PRIMARY KEY,
     movie_id INT          NOT NULL,
@@ -65,9 +65,11 @@ INSERT INTO products (name, price, quantity) VALUES
 INSERT INTO prices (ticket, discount) VALUES
 ('200', '50');
 
-INSERT INTO schedule (movie_id, date, time, location) VALUES
-(1, '2025-01-10', '18:00:00', 'Theater 1'),
-(1, '2025-01-10', '21:00:00', 'Theater 1'),
-(2, '2025-01-11', '17:30:00', 'Theater 2'),
-(3, '2025-01-12', '20:00:00', 'Theater 3'),
-(4, '2025-01-13', '15:00:00', 'Theater 4');
+INSERT INTO sessions (movie_id, date, time, location) VALUES
+(1, '2025-01-10', '18:00:00', 'Hall 1'),
+(1, '2025-01-10', '21:00:00', 'Hall 2'),
+(2, '2025-01-11', '17:30:00', 'Hall 1'),
+(3, '2025-01-12', '20:00:00', 'Hall 1'),
+(4, '2025-01-13', '15:00:00', 'Hall 1');
+
+select * from sessions
