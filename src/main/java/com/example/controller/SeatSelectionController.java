@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.database.DatabaseConnection;
 import com.example.model.Movie;
+import com.example.model.Product;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,12 +43,12 @@ public class SeatSelectionController {
     private int regularTickets;
     private int discountedTickets;
     private String hall;
+    private List<Product> selectedProducts;
 
     @FXML
     public void initialize() {
 
     }
-
 
     public void setMovie(Movie movie) {
         this.movie = movie;
@@ -77,8 +78,12 @@ public class SeatSelectionController {
         this.usernameLabel.setText(username);
     }
 
-    public void setHall(String hall) {
-        this.hall = hall;
+    public void setSelectedProducts(List<Product> selectedProducts) {
+        this.selectedProducts = selectedProducts;
+    }
+
+    public List<Product> getProducts() {
+        return selectedProducts;
     }
 
     private void extractHallFromSession() {
@@ -158,6 +163,28 @@ public class SeatSelectionController {
                     return;
                 }
             }
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/ShoppingCart.fxml"));
+            Parent root = loader.load();
+
+            ShoppingCartController controller = loader.getController();
+            controller.setSelectedSeats(selectedSeats);
+            controller.setMovie(movie);
+            controller.setDate(date);
+            controller.setSession(session);
+            controller.setUsername(usernameLabel.getText());
+            controller.setProducts(selectedProducts);
+            controller.setTicketCount(regularTickets);
+            controller.setDiscountedTicketCount(discountedTickets);
+
+            Stage stage = (Stage) availableSeatsLabel.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

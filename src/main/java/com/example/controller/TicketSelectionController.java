@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class TicketSelectionController {
     private Movie movie;
     private LocalDate date;
     private String session;
-    private Map<Product, Spinner<Integer>> productSpinners = new HashMap<>();
+    private List<Product> selectedProducts = new ArrayList<>();
 
     public void setMovie(Movie movie) {
         this.movie = movie;
@@ -87,7 +88,15 @@ public class TicketSelectionController {
         for (Product product : products) {
             Label productLabel = new Label(product.getName() + " - $" + product.getPrice());
             Spinner<Integer> productSpinner = new Spinner<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 0));
-            productSpinners.put(product, productSpinner);
+            productSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue > 0) {
+                    if (!selectedProducts.contains(product)) {
+                        selectedProducts.add(product);
+                    }
+                } else {
+                    selectedProducts.remove(product);
+                }
+            });
 
             HBox productBox = new HBox(10, productLabel, productSpinner);
             HBox.setHgrow(productLabel, Priority.ALWAYS);
@@ -137,6 +146,7 @@ public class TicketSelectionController {
             controller.setDiscountedTickets(discountedTickets);
             controller.setSession(session);
             controller.setUsername(usernameLabel.getText());
+            controller.setSelectedProducts(selectedProducts);
 
             Stage stage = (Stage) movieLabel.getScene().getWindow();
             Scene scene = new Scene(root);

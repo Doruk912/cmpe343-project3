@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.ShoppingCartController">
+
+    <top>
+        <StackPane style="-fx-padding: 20; -fx-background-color: #2c3e50;">
+            <Label text="Checkout" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" StackPane.alignment="CENTER" />
+        </StackPane>
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 1;">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="30" />
+                    <ColumnConstraints percentWidth="70" />
+                </columnConstraints>
+                <children>
+                    <Label text="Username:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Label fx:id="usernameLabel" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                    <Label text="Movie:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Label fx:id="movieLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                    <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Label fx:id="dateLabel" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                    <Label text="Session:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Label fx:id="sessionLabel" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                </children>
+            </GridPane>
+
+            <Label text="Shopping Cart" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 0 20;" />
+            <TableView fx:id="cartTableView" style="-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 1; -fx-pref-width: 800px; -fx-pref-height: 300px;">
+                <columns>
+                    <TableColumn fx:id="nameColumn" text="Name" prefWidth="300">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="name" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="amountColumn" text="Amount" prefWidth="100">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="amount" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="priceColumn" text="Price" prefWidth="100">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="price" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="vatColumn" text="Vat" prefWidth="100">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="vat" />
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="BOTTOM_RIGHT" style="-fx-padding: 0 20 20 20;">
+            <Button text="Back" onAction="#onBack" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" />
+            <Button text="Checkout" onAction="#onCheckout" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" />
+        </HBox>
+    </bottom>
+
+</BorderPane>
