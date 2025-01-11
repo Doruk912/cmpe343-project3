@@ -77,3 +77,23 @@ INSERT INTO sessions (movie_id, date, time, location) VALUES
 (2, '2025-01-11', '17:30:00', 'Hall 1'),
 (3, '2025-01-12', '20:00:00', 'Hall 1'),
 (4, '2025-01-13', '15:00:00', 'Hall 1');
+
+INSERT INTO seats (session_id, seat_number) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10),
+(1, 11),
+(1, 12),
+(1, 13),
+(1, 14),
+(1, 15),
+(1, 16);
+
+select * from seats
