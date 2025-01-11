@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.MainApplication;
 import com.example.database.DatabaseConnection;
 import com.example.model.Movie;
+import com.example.model.Session;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,6 +39,9 @@ public class CashierMenuController {
         genreComboBox.valueProperty().addListener((observable, oldValue, newValue) -> filterMovies());
         loadGenres();
         configureDatePicker();
+
+        movieListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> loadAvailableSessions());
+        datePicker.valueProperty().addListener((observable, oldValue, newValue) -> loadAvailableSessions());
     }
 
     private void loadMovies() {
@@ -101,6 +105,40 @@ public class CashierMenuController {
         datePicker.setPromptText("dd/MM/yyyy");
     }
 
+    private void loadAvailableSessions() {
+        Movie selectedMovie = movieListView.getSelectionModel().getSelectedItem();
+        LocalDate selectedDate = datePicker.getValue();
+
+        if (selectedMovie != null && selectedDate != null) {
+            DatabaseConnection db = new DatabaseConnection();
+            List<Session> sessions = db.getSessionsForMovie(selectedMovie.getId()).stream()
+                    .filter(session -> session.getDate().equals(selectedDate))
+                    .toList();
+
+            if (sessions.isEmpty()) {
+                sessionComboBox.setPromptText("No sessions");
+                sessionComboBox.setItems(FXCollections.observableArrayList());
+            } else {
+                List<String> sessionDetails = sessions.stream()
+                        .map(session -> session.getTime().toString() + " - " + session.getLocation())
+                        .collect(Collectors.toList());
+                sessionComboBox.setPromptText("Select a session");
+                sessionComboBox.setItems(FXCollections.observableArrayList(sessionDetails));
+            }
+        } else {
+            sessionComboBox.setPromptText("");
+            sessionComboBox.getItems().clear();
+        }
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     public void onLogout(ActionEvent actionEvent) {
         MainApplication app = new MainApplication();
         app.showLoginScreen((Stage) usernameLabel.getScene().getWindow());
@@ -111,5 +149,27 @@ public class CashierMenuController {
     }
 
     public void onContinue(ActionEvent actionEvent) {
+        Movie selectedMovie = movieListView.getSelectionModel().getSelectedItem();
+        LocalDate selectedDate = datePicker.getValue();
+        String selectedSession = sessionComboBox.getSelectionModel().getSelectedItem();
+
+        if (selectedMovie == null) {
+            showAlert("Please select a movie.");
+            return;
+        }
+
+        if (selectedDate == null) {
+            showAlert("Please select a date.");
+            return;
+        }
+
+        if (selectedSession == null) {
+            showAlert("Please select a session.");
+            return;
+        }
+
+        MainApplication app = new MainApplication();
+        app.showTicketSelectionScreen((Stage) usernameLabel.getScene().getWindow(), selectedMovie, selectedDate, selectedSession, usernameLabel.getText());
+
     }
 }

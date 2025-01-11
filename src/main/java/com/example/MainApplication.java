@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.controller.*;
+import com.example.model.Movie;
 import com.example.model.User;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -12,6 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class MainApplication extends Application {
@@ -113,6 +116,25 @@ public class MainApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void showTicketSelectionScreen(Stage stage, Movie movie, LocalDate date, String session, String username) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/TicketSelection.fxml"));
+            Parent root = loader.load();
+
+            TicketSelectionController controller = loader.getController();
+            controller.setMovie(movie);
+            controller.setDate(date);
+            controller.setSession(session);
+            controller.setUsername(username);
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

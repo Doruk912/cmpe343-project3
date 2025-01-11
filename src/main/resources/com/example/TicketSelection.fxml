@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.TicketSelectionController">
+
+    <top>
+        <StackPane style="-fx-padding: 20; -fx-background-color: #2c3e50;">
+            <Label text="Ticket Selection and Product Purchasing" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" StackPane.alignment="CENTER" />
+        </StackPane>
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 1;">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints percentHeight="20" />
+                    <RowConstraints percentHeight="20" />
+                    <RowConstraints percentHeight="20" />
+                    <RowConstraints percentHeight="20" />
+                    <RowConstraints percentHeight="20" />
+                </rowConstraints>
+                <children>
+                    <Label text="Movie:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Label fx:id="movieLabel" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                    <Label text="Date:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Label fx:id="dateLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                    <Label text="Session:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Label fx:id="sessionLabel" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                    <Label text="Regular Tickets:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Spinner fx:id="regularTicketsSpinner" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                    <Label text="Discounted Tickets:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;" />
+                    <Spinner fx:id="discountedTicketsSpinner" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+                </children>
+            </GridPane>
+
+            <Label text="Products" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 0 20;" />
+            <ListView fx:id="productsListView" prefHeight="150.0" style="-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 1;" />
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="BOTTOM_RIGHT" style="-fx-padding: 20;">
+            <Button text="Back" onAction="#onBack" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" />
+            <Button text="Continue" onAction="#onContinue" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" />
+        </HBox>
+    </bottom>
+
+    <Label fx:id="usernameLabel" text="Username" visible="false"/>
+
+</BorderPane>
