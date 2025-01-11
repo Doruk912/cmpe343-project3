@@ -114,5 +114,36 @@ public class TicketSelectionController {
     }
 
     public void onContinue(ActionEvent actionEvent) {
+        int regularTickets = regularTicketsSpinner.getValue();
+        int discountedTickets = discountedTicketsSpinner.getValue();
+
+        if (regularTickets == 0 && discountedTickets == 0) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Tickets Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select at least one ticket.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/SeatSelection.fxml"));
+            Parent root = loader.load();
+
+            SeatSelectionController controller = loader.getController();
+            controller.setMovie(movie);
+            controller.setDate(date);
+            controller.setSession(session);
+            controller.setRegularTickets(regularTickets);
+            controller.setDiscountedTickets(discountedTickets);
+            controller.setUsername(usernameLabel.getText());
+
+            Stage stage = (Stage) movieLabel.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

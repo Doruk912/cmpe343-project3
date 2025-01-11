@@ -30,14 +30,22 @@ CREATE TABLE prices (
     discount DECIMAL(5,2)
 );
 
-CREATE TABLE sessions
-(
-    id       INT AUTO_INCREMENT PRIMARY KEY,
-    movie_id INT          NOT NULL,
-    date     DATE         NOT NULL,
-    time     TIME         NOT NULL,
+CREATE TABLE sessions(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
     location VARCHAR(255) NOT NULL,
     FOREIGN KEY (movie_id) REFERENCES movies (id)
+);
+
+CREATE TABLE seats(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    session_id INT NOT NULL,
+    seat_number INT NOT NULL,
+    is_taken BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (session_id) REFERENCES sessions (id),
+    UNIQUE (session_id, seat_number)
 );
 
 INSERT INTO users (username, name, password, role) VALUES
@@ -54,10 +62,8 @@ INSERT INTO movies (title, genre, summary, poster) VALUES
 INSERT INTO products (name, price, quantity) VALUES
 ('Popcorn - Large', 99.99 , 250),
 ('Popcorn - Medium', 79.99, 250),
-('Popcorn - Small', 59.99, 250),
 ('Nachos - Large', 250, 100),
 ('Nachos - Medium', 200, 100),
-('Nachos - Small', 150, 100),
 ('Coca-Cola', 50, 500),
 ('Sprite', 50, 500),
 ('3D Glasses', 9.50, 1000);
@@ -71,5 +77,3 @@ INSERT INTO sessions (movie_id, date, time, location) VALUES
 (2, '2025-01-11', '17:30:00', 'Hall 1'),
 (3, '2025-01-12', '20:00:00', 'Hall 1'),
 (4, '2025-01-13', '15:00:00', 'Hall 1');
-
-select * from sessions
