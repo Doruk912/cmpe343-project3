@@ -292,45 +292,9 @@ public class DatabaseConnection {
         }
         return false;
     }
-    public List<Session> getSchedulesForMovie(int movieId) {
-        List<Session> schedules = new ArrayList<>();
-        String query = "SELECT * FROM schedule WHERE movie_id = ?";
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, movieId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                schedules.add(new Session(
-                        resultSet.getInt("id"),
-                        resultSet.getInt("movie_id"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime(),
-                        resultSet.getString("location")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return schedules;
-    }
-
-    public boolean addSchedule(Session schedule) {
-        String query = "INSERT INTO schedule (movie_id, date, time, location) VALUES (?, ?, ?, ?)";
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, schedule.getMovieId());
-            preparedStatement.setDate(2, Date.valueOf(schedule.getDate()));
-            preparedStatement.setTime(3, Time.valueOf(schedule.getTime()));
-            preparedStatement.setString(4, schedule.getLocation());
-            return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     public List<Session> getSessionsForMovie(int id) {
-        String query = "SELECT * FROM schedule WHERE movie_id = ?";
+        String query = "SELECT * FROM sessions WHERE movie_id = ?";
         List<Session> sessions = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -351,4 +315,52 @@ public class DatabaseConnection {
         }
         return sessions;
     }
+
+    public boolean addSession(Session session) {
+        String query = "INSERT INTO sessions (movie_id, date, time, location) VALUES (?, ?, ?, ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, session.getMovieId());
+            preparedStatement.setDate(2, Date.valueOf(session.getDate()));
+            preparedStatement.setTime(3, Time.valueOf(session.getTime()));
+            preparedStatement.setString(4, session.getLocation());
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while adding the session");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateSession(Session session) {
+        String query = "UPDATE sessions SET date = ?, time = ?, location = ? WHERE id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setDate(1, Date.valueOf(session.getDate()));
+            preparedStatement.setTime(2, Time.valueOf(session.getTime()));
+            preparedStatement.setString(3, session.getLocation());
+            preparedStatement.setInt(4, session.getId());
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while updating the session");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean removeSession(Session selectedSession) {
+        String query = "DELETE FROM sessions WHERE id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, selectedSession.getId());
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("An error occurred while deleting the session");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
 }
