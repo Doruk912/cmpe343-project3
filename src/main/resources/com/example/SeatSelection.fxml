@@ -21,6 +21,8 @@
         <VBox spacing="10" style="-fx-padding: 20;">
             <ImageView fx:id="hallImageView" fitWidth="600" preserveRatio="true" />
             <Label fx:id="availableSeatsLabel" style="-fx-font-size: 16px;" />
+            <Label text="Enter seat numbers:" style="-fx-font-size: 16px;" />
+            <VBox fx:id="seatInputVBox" spacing="10" />
         </VBox>
     </center>
 

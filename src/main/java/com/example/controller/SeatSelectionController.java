@@ -7,11 +7,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -31,6 +31,9 @@ public class SeatSelectionController {
     private Label availableSeatsLabel;
 
     @FXML
+    private VBox seatInputVBox;
+
+    @FXML
     private Label usernameLabel;
 
     private Movie movie;
@@ -45,6 +48,7 @@ public class SeatSelectionController {
 
     }
 
+
     public void setMovie(Movie movie) {
         this.movie = movie;
     }
@@ -58,6 +62,7 @@ public class SeatSelectionController {
         extractHallFromSession();
         loadHallImage();
         loadAvailableSeats();
+        displaySeatInputs();
     }
 
     public void setRegularTickets(int regularTickets) {
@@ -86,7 +91,6 @@ public class SeatSelectionController {
     }
 
     private void loadHallImage() {
-        System.out.println(session);
         if (hall.equals("Hall 1")) {
             hallImageView.setImage(new Image("/com/example/images/hall1.png"));
         } else if (hall.equals("Hall 2")) {
@@ -95,23 +99,28 @@ public class SeatSelectionController {
     }
 
     private void loadAvailableSeats() {
-        List<Integer> availableSeats = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String query = "SELECT seat_number FROM seats WHERE session_id = (SELECT id FROM sessions WHERE movie_id = ? AND date = ? AND location = ?) AND is_taken = FALSE";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, movie.getId());
-            statement.setDate(2, java.sql.Date.valueOf(date));
-            statement.setString(3, hall);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                availableSeats.add(resultSet.getInt("seat_number"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        DatabaseConnection db = new DatabaseConnection();
+        List<Integer> availableSeats = db.getAvailableSeats(movie.getId(), date, hall);
         availableSeatsLabel.setText("Available Seats: " + availableSeats.toString());
+    }
+
+    private void displaySeatInputs() {
+        int totalTickets = regularTickets + discountedTickets;
+        for (int i = 0; i < totalTickets; i++) {
+            TextField seatInput = new TextField();
+            seatInput.setPromptText("Enter seat number for ticket " + (i + 1));
+            seatInput.setPrefWidth(50);
+
+            // Add TextFormatter to allow only positive numbers
+            seatInput.setTextFormatter(new TextFormatter<>(change -> {
+                if (change.getControlNewText().matches("\\d*")) {
+                    return change;
+                }
+                return null;
+            }));
+
+            seatInputVBox.getChildren().add(seatInput);
+        }
     }
 
     public void onBack(ActionEvent actionEvent) {
@@ -132,7 +141,31 @@ public class SeatSelectionController {
     }
 
     public void onConfirm(ActionEvent actionEvent) {
-        // Handle seat confirmation logic
-        // For example, save selected seats to the database or pass to the next screen
+        List<Integer> selectedSeats = new ArrayList<>();
+        List<Integer> availableSeats = new DatabaseConnection().getAvailableSeats(movie.getId(), date, hall);
+        for (javafx.scene.Node node : seatInputVBox.getChildren()) {
+            if (node instanceof TextField) {
+                TextField seatInput = (TextField) node;
+                try {
+                    int seatNumber = Integer.parseInt(seatInput.getText());
+                    if (!availableSeats.contains(seatNumber)) {
+                        showAlert("Invalid Seat Number", "Seat number " + seatNumber + " is not available.");
+                        return;
+                    }
+                    selectedSeats.add(seatNumber);
+                } catch (NumberFormatException e) {
+                    showAlert("Invalid Input", "Please enter valid seat numbers.");
+                    return;
+                }
+            }
+        }
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

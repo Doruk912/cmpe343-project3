@@ -133,9 +133,9 @@ public class TicketSelectionController {
             SeatSelectionController controller = loader.getController();
             controller.setMovie(movie);
             controller.setDate(date);
-            controller.setSession(session);
             controller.setRegularTickets(regularTickets);
             controller.setDiscountedTickets(discountedTickets);
+            controller.setSession(session);
             controller.setUsername(usernameLabel.getText());
 
             Stage stage = (Stage) movieLabel.getScene().getWindow();

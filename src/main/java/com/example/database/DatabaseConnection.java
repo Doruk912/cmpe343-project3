@@ -375,5 +375,24 @@ public class DatabaseConnection {
         return null;
     }
 
+    public List<Integer> getAvailableSeats(int movieId, LocalDate date, String location) {
+        List<Integer> availableSeats = new ArrayList<>();
+        try (Connection connection = getConnection()) {
+            String query = "SELECT seat_number FROM seats WHERE session_id = (SELECT id FROM sessions WHERE movie_id = ? AND date = ? AND location = ?) AND is_taken = FALSE";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, movieId);
+            statement.setDate(2, java.sql.Date.valueOf(date));
+            statement.setString(3, location);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                availableSeats.add(resultSet.getInt("seat_number"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return availableSeats;
+    }
+
 
 }
