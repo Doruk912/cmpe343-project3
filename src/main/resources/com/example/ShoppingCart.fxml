@@ -70,6 +70,10 @@
                     </TableColumn>
                 </columns>
             </TableView>
+            <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10 20;">
+                <Label text="Total Price: " style="-fx-font-weight: bold;" />
+                <Label fx:id="totalPriceLabel" />
+            </HBox>
         </VBox>
     </center>
 
