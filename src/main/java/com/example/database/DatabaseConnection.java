@@ -361,6 +361,19 @@ public class DatabaseConnection {
         return false;
     }
 
+    public BigDecimal getDiscountPercentage() {
+        String query = "SELECT discount FROM prices";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getBigDecimal("discount");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }
