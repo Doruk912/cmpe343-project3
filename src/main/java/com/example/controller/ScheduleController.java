@@ -1,3 +1,7 @@
+/**
+ * Controller for managing the schedule of movie sessions.
+ * Provides functionality to view, add, edit, and delete sessions.
+ */
 package com.example.controller;
 
 import com.example.database.DatabaseConnection;
@@ -42,6 +46,9 @@ public class ScheduleController {
 
     private Movie selectedMovie;
 
+    /**
+     * Initializes the table columns and prepares the controller.
+     */
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -50,6 +57,11 @@ public class ScheduleController {
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
     }
 
+    /**
+     * Handles the action of adding a new session to the schedule.
+     *
+     * @param actionEvent the action event triggered by the user.
+     */
     public void handleAddSession(ActionEvent actionEvent) {
         Dialog<Session> dialog = new Dialog<>();
         dialog.setTitle("Add New Session");
@@ -106,6 +118,11 @@ public class ScheduleController {
         });
     }
 
+    /**
+     * Handles the action of editing an existing session.
+     *
+     * @param actionEvent the action event triggered by the user.
+     */
     public void handleEditSession(ActionEvent actionEvent) {
         Session selectedSession = scheduleTable.getSelectionModel().getSelectedItem();
         if (selectedSession == null) {
@@ -173,6 +190,11 @@ public class ScheduleController {
         });
     }
 
+    /**
+     * Handles the action of deleting a selected session.
+     *
+     * @param actionEvent the action event triggered by the user.
+     */
     public void handleDeleteSession(ActionEvent actionEvent) {
         Session selectedSession = scheduleTable.getSelectionModel().getSelectedItem();
         if (selectedSession == null) {
@@ -198,18 +220,29 @@ public class ScheduleController {
         });
     }
 
+    /**
+     * Closes the schedule window.
+     */
     @FXML
     private void handleClose() {
         Stage stage = (Stage) scheduleTable.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Sets the selected movie for which the schedule is displayed.
+     *
+     * @param movie the selected movie.
+     */
     public void setSelectedMovie(Movie movie) {
         this.selectedMovie = movie;
         scheduleLabel.setText("Schedule for " + movie.getTitle());
         loadScheduleForMovie();
     }
 
+    /**
+     * Loads the schedule for the selected movie from the database.
+     */
     private void loadScheduleForMovie() {
         if (selectedMovie != null) {
             DatabaseConnection db = new DatabaseConnection();
@@ -218,6 +251,12 @@ public class ScheduleController {
         }
     }
 
+    /**
+     * Displays a warning alert with the specified title and content.
+     *
+     * @param title   the title of the alert.
+     * @param content the content of the alert.
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -226,6 +265,12 @@ public class ScheduleController {
         alert.showAndWait();
     }
 
+    /**
+     * Displays an informational alert with the specified title and content.
+     *
+     * @param title   the title of the alert.
+     * @param content the content of the alert.
+     */
     private void showInfo(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

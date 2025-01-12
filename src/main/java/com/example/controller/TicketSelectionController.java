@@ -1,3 +1,7 @@
+/**
+ * Controller class for managing ticket selection in the application.
+ * Handles ticket selection, product management, and navigation to other views.
+ */
 package com.example.controller;
 
 import com.example.database.DatabaseConnection;
@@ -26,15 +30,35 @@ import java.util.List;
 import java.util.Map;
 
 public class TicketSelectionController {
+
+    /** Label for displaying the username. */
     public Label usernameLabel;
+
+    /** Label for displaying the movie title. */
     public Label movieLabel;
+
+    /** Label for displaying the selected date. */
     public Label dateLabel;
+
+    /** Label for displaying the session time. */
     public Label sessionLabel;
+
+    /** Label for displaying the regular ticket price. */
     public Label regularTicketPriceLabel;
+
+    /** Label for displaying the discounted ticket price. */
     public Label discountedTicketPriceLabel;
+
+    /** Spinner for selecting the number of regular tickets. */
     public Spinner<Integer> regularTicketsSpinner;
+
+    /** Spinner for selecting the number of discounted tickets. */
     public Spinner<Integer> discountedTicketsSpinner;
+
+    /** ListView for displaying available products. */
     public ListView<Product> productsListView;
+
+    /** VBox for dynamically adding product controls. */
     public VBox productsVBox;
 
     private Movie movie;
@@ -42,25 +66,45 @@ public class TicketSelectionController {
     private String session;
     private List<Product> selectedProducts = new ArrayList<>();
 
+    /**
+     * Sets the movie details and updates the UI.
+     * @param movie The movie to set.
+     */
     public void setMovie(Movie movie) {
         this.movie = movie;
         movieLabel.setText(movie.getTitle());
     }
 
+    /**
+     * Sets the selected date and updates the UI.
+     * @param date The date to set.
+     */
     public void setDate(LocalDate date) {
         this.date = date;
         dateLabel.setText(date.toString());
     }
 
+    /**
+     * Sets the session time and updates the UI.
+     * @param session The session time to set.
+     */
     public void setSession(String session) {
         this.session = session;
         sessionLabel.setText(session);
     }
 
+    /**
+     * Sets the username and updates the UI.
+     * @param username The username to set.
+     */
     public void setUsername(String username) {
         usernameLabel.setText(username);
     }
 
+    /**
+     * Initializes the controller and its components.
+     * Configures spinners and loads ticket prices and products.
+     */
     @FXML
     public void initialize() {
         regularTicketsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 0));
@@ -70,6 +114,9 @@ public class TicketSelectionController {
         loadProducts();
     }
 
+    /**
+     * Loads ticket prices from the database and updates the UI.
+     */
     private void loadTicketPrices() {
         DatabaseConnection db = new DatabaseConnection();
         BigDecimal ticketPrice = db.getTicketPrice();
@@ -81,6 +128,9 @@ public class TicketSelectionController {
         discountedTicketPriceLabel.setText("$" + df.format(ticketPrice.multiply(BigDecimal.ONE.subtract(discountPercentage.divide(BigDecimal.valueOf(100))))));
     }
 
+    /**
+     * Loads available products from the database and populates the UI.
+     */
     private void loadProducts() {
         DatabaseConnection db = new DatabaseConnection();
         List<Product> products = db.getAllProducts();
@@ -105,6 +155,10 @@ public class TicketSelectionController {
         }
     }
 
+    /**
+     * Handles the "Back" button action to navigate to the Cashier Menu.
+     * @param actionEvent The event triggered by the button.
+     */
     public void onBack(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/CashierMenu.fxml"));
@@ -122,6 +176,11 @@ public class TicketSelectionController {
         }
     }
 
+    /**
+     * Handles the "Continue" button action to navigate to the Seat Selection view.
+     * Validates ticket selection before proceeding.
+     * @param actionEvent The event triggered by the button.
+     */
     public void onContinue(ActionEvent actionEvent) {
         int regularTickets = regularTicketsSpinner.getValue();
         int discountedTickets = discountedTicketsSpinner.getValue();

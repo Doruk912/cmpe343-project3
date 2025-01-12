@@ -1,3 +1,8 @@
+/**
+ * Controller class for managing a personnel table in a JavaFX application.
+ * This class handles operations such as adding, editing, removing personnel,
+ * and provides interaction with the underlying database for managing users.
+ */
 package com.example.controller;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -37,6 +42,10 @@ public class PersonnelTableController {
 
     private String currentUser;
 
+    /**
+     * Initializes the personnel table by setting cell value factories
+     * and loading personnel from the database.
+     */
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -50,6 +59,12 @@ public class PersonnelTableController {
         personnelTable.setItems(personnelList);
     }
 
+    /**
+     * Handles the addition of a new personnel. Opens a dialog for user input,
+     * validates the data, and adds the personnel to the database and table if valid.
+     *
+     * @param actionEvent the event triggered by the user interaction.
+     */
     public void handleAddPersonnel(ActionEvent actionEvent) {
         Dialog<User> dialog = new Dialog<>();
         dialog.setTitle("Add New Personnel");
@@ -110,6 +125,12 @@ public class PersonnelTableController {
         });
     }
 
+    /**
+     * Handles the editing of an existing personnel. Opens a dialog for modifying personnel details,
+     * validates the changes, and updates the database and table if valid.
+     *
+     * @param actionEvent the event triggered by the user interaction.
+     */
     public void handleEditPersonnel(ActionEvent actionEvent) {
         User selectedUser = personnelTable.getSelectionModel().getSelectedItem();
         if (selectedUser == null) {
@@ -185,6 +206,12 @@ public class PersonnelTableController {
         });
     }
 
+    /**
+     * Handles the removal of a selected personnel. Prompts the user for confirmation
+     * and removes the personnel from the database and table upon confirmation.
+     *
+     * @param actionEvent the event triggered by the user interaction.
+     */
     public void handleRemovePersonnel(ActionEvent actionEvent) {
         User selectedUser = personnelTable.getSelectionModel().getSelectedItem();
         if (selectedUser == null) {
@@ -215,11 +242,22 @@ public class PersonnelTableController {
         });
     }
 
+    /**
+     * Closes the current application stage.
+     *
+     * @param actionEvent the event triggered by the user interaction.
+     */
     public void handleClose(ActionEvent actionEvent) {
         Stage stage = (Stage) personnelTable.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Displays a warning alert dialog with the given title and message.
+     *
+     * @param title   the title of the alert.
+     * @param content the message content of the alert.
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -228,6 +266,12 @@ public class PersonnelTableController {
         alert.showAndWait();
     }
 
+    /**
+     * Displays an informational alert dialog with the given title and message.
+     *
+     * @param title   the title of the alert.
+     * @param content the message content of the alert.
+     */
     private void showInfo(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -236,10 +280,21 @@ public class PersonnelTableController {
         alert.showAndWait();
     }
 
+    /**
+     * Hashes the given password using BCrypt.
+     *
+     * @param password the plain text password to hash.
+     * @return the hashed password as a string.
+     */
     private String hashPassword(String password) {
         return BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 
+    /**
+     * Sets the current logged-in user.
+     *
+     * @param currentUser the username of the current logged-in user.
+     */
     public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
     }

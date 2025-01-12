@@ -21,6 +21,10 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller class for managing the cashier menu, including movie selection, date, and session handling.
+ * This class allows the cashier to filter movies, select a date, choose a session, and proceed to ticket selection.
+ */
 public class CashierMenuController {
     public Label usernameLabel;
     public ListView<Movie> movieListView;
@@ -31,6 +35,10 @@ public class CashierMenuController {
 
     private ObservableList<Movie> movieList;
 
+    /**
+     * Initializes the controller by loading movies, configuring filters, and setting up UI components.
+     * This method is automatically called after the FXML is loaded.
+     */
     @FXML
     public void initialize() {
         loadMovies();
@@ -44,6 +52,9 @@ public class CashierMenuController {
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> loadAvailableSessions());
     }
 
+    /**
+     * Loads the list of movies from the database and populates the movie list view.
+     */
     private void loadMovies() {
         DatabaseConnection db = new DatabaseConnection();
         List<Movie> movies = db.getAllMovies();
@@ -51,6 +62,9 @@ public class CashierMenuController {
         movieListView.getItems().setAll(movies);
     }
 
+    /**
+     * Loads all available genres from the database and populates the genre combo box.
+     */
     private void loadGenres() {
         DatabaseConnection db = new DatabaseConnection();
         List<String> genres = db.getAllGenres();
@@ -59,6 +73,11 @@ public class CashierMenuController {
         genreComboBox.setValue("All");
     }
 
+    /**
+     * Filters the movie list based on the search query entered in the title search field.
+     * 
+     * @param title the title query used for filtering.
+     */
     private void filterMoviesByTitle(String title) {
         List<Movie> filteredMovies = movieList.stream()
                 .filter(movie -> movie.getTitle().toLowerCase().contains(title.toLowerCase()))
@@ -66,6 +85,9 @@ public class CashierMenuController {
         movieListView.setItems(FXCollections.observableArrayList(filteredMovies));
     }
 
+    /**
+     * Filters the movie list based on both the search query and the selected genre.
+     */
     private void filterMovies() {
         String title = searchTextField.getText().toLowerCase();
         String genre = genreComboBox.getValue();
@@ -76,6 +98,9 @@ public class CashierMenuController {
         movieListView.setItems(FXCollections.observableArrayList(filteredMovies));
     }
 
+    /**
+     * Configures the date picker to use a custom date format and handle conversion between String and LocalDate.
+     */
     private void configureDatePicker() {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         datePicker.setConverter(new StringConverter<LocalDate>() {
@@ -105,6 +130,9 @@ public class CashierMenuController {
         datePicker.setPromptText("dd/MM/yyyy");
     }
 
+    /**
+     * Loads available sessions based on the selected movie and date, and updates the session combo box.
+     */
     private void loadAvailableSessions() {
         Movie selectedMovie = movieListView.getSelectionModel().getSelectedItem();
         LocalDate selectedDate = datePicker.getValue();
@@ -131,6 +159,11 @@ public class CashierMenuController {
         }
     }
 
+    /**
+     * Displays a warning alert with the provided message.
+     *
+     * @param message the message to display in the alert.
+     */
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Warning");
@@ -139,15 +172,31 @@ public class CashierMenuController {
         alert.showAndWait();
     }
 
+    /**
+     * Handles the logout action and navigates back to the login screen.
+     * 
+     * @param actionEvent the action event triggered by the logout button.
+     */
     public void onLogout(ActionEvent actionEvent) {
         MainApplication app = new MainApplication();
         app.showLoginScreen((Stage) usernameLabel.getScene().getWindow());
     }
 
+    /**
+     * Sets the username label to the provided username.
+     *
+     * @param username the username to set in the label.
+     */
     public void setUsername(String username) {
         usernameLabel.setText(username);
     }
 
+    /**
+     * Continues to the ticket selection screen after verifying that the movie, date, and session are selected.
+     * If any of these are missing, a warning alert is shown.
+     * 
+     * @param actionEvent the action event triggered by the continue button.
+     */
     public void onContinue(ActionEvent actionEvent) {
         Movie selectedMovie = movieListView.getSelectionModel().getSelectedItem();
         LocalDate selectedDate = datePicker.getValue();

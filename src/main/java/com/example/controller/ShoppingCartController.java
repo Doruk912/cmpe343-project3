@@ -1,3 +1,7 @@
+/**
+ * Controller class for managing the shopping cart view in a movie ticket booking application.
+ * Handles the display of cart items, total price calculations, and invoice generation.
+ */
 package com.example.controller;
 
 import com.example.database.DatabaseConnection;
@@ -37,7 +41,9 @@ import java.util.List;
 
 public class ShoppingCartController {
 
+    /** Label for displaying the total price of items in the cart. */
     public Label totalPriceLabel;
+
     @FXML
     private Label movieLabel;
 
@@ -73,6 +79,9 @@ public class ShoppingCartController {
     private int ticketCount;
     private int discountedTicketCount;
 
+    /**
+     * Initializes the controller and sets up the table columns.
+     */
     @FXML
     public void initialize() {
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -81,45 +90,80 @@ public class ShoppingCartController {
         vatColumn.setCellValueFactory(cellData -> cellData.getValue().vatProperty().asObject());
     }
 
+    /**
+     * Sets the selected seats for the cart.
+     * @param selectedSeats List of selected seat numbers.
+     */
     public void setSelectedSeats(List<Integer> selectedSeats) {
         this.selectedSeats = selectedSeats;
         updateCartTableView();
     }
 
+    /**
+     * Sets the selected products for the cart.
+     * @param products List of selected products.
+     */
     public void setProducts(List<Product> products) {
         this.products = products;
         updateCartTableView();
     }
 
+    /**
+     * Sets the selected movie for the cart.
+     * @param movie Movie object.
+     */
     public void setMovie(Movie movie) {
         this.movie = movie;
         movieLabel.setText(movie.getTitle());
     }
 
+    /**
+     * Sets the selected date for the cart.
+     * @param date Selected date.
+     */
     public void setDate(LocalDate date) {
         this.date = date;
         dateLabel.setText(date.toString());
     }
 
+    /**
+     * Sets the selected session for the cart.
+     * @param session Selected session.
+     */
     public void setSession(String session) {
         this.session = session;
         sessionLabel.setText(session);
     }
 
+    /**
+     * Sets the username for the current session.
+     * @param username Username of the user.
+     */
     public void setUsername(String username) {
         this.usernameLabel.setText(username);
     }
 
+    /**
+     * Sets the count of regular tickets in the cart.
+     * @param ticketCount Number of regular tickets.
+     */
     public void setTicketCount(int ticketCount) {
         this.ticketCount = ticketCount;
         updateCartTableView();
     }
 
+    /**
+     * Sets the count of discounted tickets in the cart.
+     * @param discountedTicketCount Number of discounted tickets.
+     */
     public void setDiscountedTicketCount(int discountedTicketCount) {
         this.discountedTicketCount = discountedTicketCount;
         updateCartTableView();
     }
 
+    /**
+     * Updates the items displayed in the cart table and calculates the total price.
+     */
     private void updateCartTableView() {
         DatabaseConnection db = new DatabaseConnection();
         cartTableView.getItems().clear();
@@ -153,6 +197,10 @@ public class ShoppingCartController {
         totalPriceLabel.setText(String.format("$%.2f", totalPrice));
     }
 
+    /**
+     * Generates an invoice in PDF format and allows the user to save it.
+     * @param actionEvent Event triggered by the checkout button.
+     */
     public void onCheckout(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Invoice");
@@ -245,6 +293,9 @@ public class ShoppingCartController {
         }
     }
 
+    /**
+     * Helper class representing a cart item.
+     */
     public static class CartItem {
         private final SimpleStringProperty name;
         private final SimpleIntegerProperty amount;
@@ -258,34 +309,66 @@ public class ShoppingCartController {
             this.vat = new SimpleDoubleProperty(vat);
         }
 
+        /**
+         * Gets the name of the cart item.
+         * @return Name of the cart item.
+         */
         public String getName() {
             return name.get();
         }
 
+        /**
+         * Gets the amount of the cart item.
+         * @return Amount of the cart item.
+         */
         public int getAmount() {
             return amount.get();
         }
 
+        /**
+         * Gets the price of the cart item.
+         * @return Price of the cart item.
+         */
         public double getPrice() {
             return price.get();
         }
 
+        /**
+         * Gets the VAT of the cart item.
+         * @return VAT of the cart item.
+         */
         public double getVat() {
             return vat.get();
         }
 
+        /**
+         * Gets the name property of the cart item.
+         * @return SimpleStringProperty representing the name.
+         */
         public SimpleStringProperty nameProperty() {
             return name;
         }
 
+        /**
+         * Gets the amount property of the cart item.
+         * @return SimpleIntegerProperty representing the amount.
+         */
         public SimpleIntegerProperty amountProperty() {
             return amount;
         }
 
+        /**
+         * Gets the price property of the cart item.
+         * @return SimpleDoubleProperty representing the price.
+         */
         public SimpleDoubleProperty priceProperty() {
             return price;
         }
 
+        /**
+         * Gets the VAT property of the cart item.
+         * @return SimpleDoubleProperty representing the VAT.
+         */
         public SimpleDoubleProperty vatProperty() {
             return vat;
         }

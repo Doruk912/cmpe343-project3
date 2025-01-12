@@ -17,7 +17,18 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Main application class for the Cinema Application.
+ * 
+ * This class is responsible for handling the primary application flow, including showing the splash screen,
+ * login screen, and role-specific menus based on the user's role (Admin, Manager, Cashier).
+ */
 public class MainApplication extends Application {
+    /**
+     * Entry point of the JavaFX application. This method starts the application and displays the splash screen.
+     *
+     * @param primaryStage the primary stage for this application
+     */
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -38,6 +49,13 @@ public class MainApplication extends Application {
         }
     }
 
+    /**
+     * Displays the login screen to the user.
+     *
+     * This method is called after the splash screen finishes animating.
+     *
+     * @param primaryStage the primary stage for this application
+     */
     public void showLoginScreen(Stage primaryStage) {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/login.fxml"));
@@ -55,6 +73,14 @@ public class MainApplication extends Application {
         }
     }
 
+    /**
+     * Handles navigation to the role-specific menu based on the user's role.
+     *
+     * This method loads the appropriate FXML for the user's role and displays the corresponding menu.
+     *
+     * @param stage the primary stage for this application
+     * @param user  the authenticated user object containing role information
+     */
     private void handleRoleSpecificMenu(Stage stage, User user){
         String fxmlPath;
         String title;
@@ -78,6 +104,14 @@ public class MainApplication extends Application {
         showScene(stage, fxmlPath, title, user.getUsername());
     }
 
+    /**
+     * Displays the specified scene and sets the username for the corresponding menu.
+     *
+     * @param primaryStage the primary stage for this application
+     * @param fxmlPath     the FXML file to load for the scene
+     * @param title        the title to set for the window
+     * @param username     the username of the logged-in user
+     */
     private void showScene(Stage primaryStage, String fxmlPath, String title, String username) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -104,6 +138,12 @@ public class MainApplication extends Application {
         }
     }
 
+    /**
+     * Displays an error alert with the specified title and message.
+     *
+     * @param title   the title of the alert
+     * @param message the content message of the alert
+     */
     private void showError(String title, String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -114,10 +154,24 @@ public class MainApplication extends Application {
         });
     }
 
+    /**
+     * The main entry point for launching the JavaFX application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Displays the ticket selection screen for a specific movie, date, and session.
+     *
+     * @param stage    the primary stage for this application
+     * @param movie    the selected movie object
+     * @param date     the selected date for the session
+     * @param session  the selected session time
+     * @param username the username of the logged-in user
+     */
     public void showTicketSelectionScreen(Stage stage, Movie movie, LocalDate date, String session, String username) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/TicketSelection.fxml"));

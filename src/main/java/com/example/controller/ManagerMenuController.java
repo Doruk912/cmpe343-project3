@@ -13,11 +13,21 @@ import javafx.stage.Stage;
 
 import java.math.BigDecimal;
 
+/**
+ * Controller class for managing the manager menu in the application.
+ * This class handles various actions such as managing inventory, managing personnel, editing prices, and logging out.
+ */
 public class ManagerMenuController {
 
     @FXML
     private Label usernameLabel;
 
+    /**
+     * Handles the action to open the product inventory management window.
+     * It loads the ProductTable.fxml file and displays it in a new stage.
+     *
+     * @param actionEvent the event triggered by the user action.
+     */
     public void handleManageInventory(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/ProductTable.fxml"));
@@ -31,6 +41,12 @@ public class ManagerMenuController {
         }
     }
 
+    /**
+     * Handles the action to open the personnel management window.
+     * It loads the PersonnelTable.fxml file, sets the current user, and displays it in a new stage.
+     *
+     * @param actionEvent the event triggered by the user action.
+     */
     public void handleManagePersonnel(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/PersonnelTable.fxml"));
@@ -48,6 +64,13 @@ public class ManagerMenuController {
         }
     }
 
+    /**
+     * Handles the action to edit the ticket prices and discount rates.
+     * It opens a dialog to allow the user to enter new ticket prices and discount rates.
+     * If the values are valid, they will be updated in the database.
+     *
+     * @param actionEvent the event triggered by the user action.
+     */
     public void handleEditPrices(ActionEvent actionEvent) {
         DatabaseConnection db = new DatabaseConnection();
         BigDecimal currentTicketPrice = db.getTicketPrice();
@@ -97,15 +120,32 @@ public class ManagerMenuController {
         dialog.showAndWait();
     }
 
+    /**
+     * Sets the username to be displayed on the manager's menu.
+     *
+     * @param username the username of the logged-in user.
+     */
     public void setUsername(String username) {
         usernameLabel.setText("Logged in as: " + username);
     }
 
+    /**
+     * Handles the action to log out the user and navigate to the login screen.
+     * It calls the MainApplication class to display the login screen.
+     *
+     * @param actionEvent the event triggered by the user action.
+     */
     public void onLogout(ActionEvent actionEvent) {
         MainApplication app = new MainApplication();
         app.showLoginScreen((Stage) usernameLabel.getScene().getWindow());
     }
 
+    /**
+     * Displays an alert dialog with a warning message.
+     *
+     * @param title   the title of the alert dialog.
+     * @param content the content message of the alert dialog.
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -114,6 +154,12 @@ public class ManagerMenuController {
         alert.showAndWait();
     }
 
+    /**
+     * Displays an informational dialog with a success message.
+     *
+     * @param title   the title of the information dialog.
+     * @param content the content message of the information dialog.
+     */
     private void showInfo(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

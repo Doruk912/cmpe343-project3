@@ -31,6 +31,10 @@ public class ProductTableController {
 
     private final ObservableList<Product> productList = FXCollections.observableArrayList();
 
+    /**
+     * Initializes the product table by setting cell value factories
+     * and loading products from the database.
+     */
     @FXML
     public void initialize() {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -43,12 +47,21 @@ public class ProductTableController {
         productTable.setItems(productList);
     }
 
+    /**
+     * Closes the current application stage.
+     */
     @FXML
     private void handleClose() {
         Stage stage = (Stage) productTable.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the addition of a new product. Opens a dialog for user input,
+     * validates the data, and adds the product to the database and table if valid.
+     *
+     * @param actionEvent the event triggered by the user interaction.
+     */
     public void handleAddProduct(ActionEvent actionEvent) {
         Dialog<Product> dialog = new Dialog<>();
         dialog.setTitle("Add New Product");
@@ -106,6 +119,12 @@ public class ProductTableController {
         });
     }
 
+    /**
+     * Handles editing an existing product. Opens a dialog for modifying product details,
+     * validates the changes, and updates the database and table if valid.
+     *
+     * @param actionEvent the event triggered by the user interaction.
+     */
     public void handleEditProduct(ActionEvent actionEvent) {
         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
         if (selectedProduct == null) {
@@ -173,6 +192,12 @@ public class ProductTableController {
 
     }
 
+    /**
+     * Handles the deletion of a selected product. Prompts the user for confirmation
+     * and removes the product from the database and table upon confirmation.
+     *
+     * @param actionEvent the event triggered by the user interaction.
+     */
     public void handleDeleteProduct(ActionEvent actionEvent) {
         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
         if (selectedProduct == null) {
@@ -201,6 +226,12 @@ public class ProductTableController {
         });
     }
 
+    /**
+     * Displays a warning alert dialog with the given title and message.
+     *
+     * @param title   the title of the alert.
+     * @param content the message content of the alert.
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -209,6 +240,12 @@ public class ProductTableController {
         alert.showAndWait();
     }
 
+    /**
+     * Displays an informational alert dialog with the given title and message.
+     *
+     * @param title   the title of the alert.
+     * @param content the message content of the alert.
+     */
     private void showInfo(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

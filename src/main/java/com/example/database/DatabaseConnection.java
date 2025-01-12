@@ -13,16 +13,35 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class provides methods for interacting with the database, including operations for movies, products,
+ * users, and sessions.
+ * 
+ * <p>It allows for querying, inserting, updating, and deleting records in various tables, such as movies, products, 
+ * users, and sessions, and supports getting information about prices and available seats.</p>
+ */
 public class DatabaseConnection {
 
     private static final String URL = "jdbc:mysql://localhost:3306/group20";
     private static final String USER = "root";
     private static final String PASSWORD = "12345678";
 
+    /**
+     * Establishes a connection to the database.
+     * 
+     * @return A {@link Connection} object that represents the established database connection.
+     * @throws SQLException If a database access error occurs.
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    /**
+     * Retrieves a user from the database based on their username.
+     *
+     * @param username The username of the user to be retrieved.
+     * @return A {@link User} object representing the user, or {@code null} if no such user exists.
+     */
     public User getUser(String username) {
         String query = "SELECT * FROM users WHERE username = ?";
         User user = null;
@@ -41,6 +60,11 @@ public class DatabaseConnection {
         return user;
     }
 
+    /**
+     * Retrieves all movies from the database.
+     *
+     * @return A list of {@link Movie} objects representing all movies in the database.
+     */
     public List<Movie> getAllMovies() {
         String query = "SELECT * FROM movies";  // Assuming table name is 'movies'
         List<Movie> movies = new ArrayList<>();
@@ -63,6 +87,12 @@ public class DatabaseConnection {
         return movies;
     }
 
+    /**
+     * Adds a new movie to the database.
+     *
+     * @param movie The {@link Movie} object representing the movie to be added.
+     * @return {@code true} if the movie was successfully added, {@code false} otherwise.
+     */
     public boolean addMovie(Movie movie) {
         String query = "INSERT INTO movies (title, genre, poster, summary) VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection();
@@ -79,7 +109,13 @@ public class DatabaseConnection {
         return false;
     }
 
-
+    /**
+     * Updates an existing movie in the database.
+     *
+     * @param title The title of the movie to be updated.
+     * @param movie The {@link Movie} object containing the updated movie data.
+     * @return {@code true} if the movie was successfully updated, {@code false} otherwise.
+     */
     public boolean updateMovie(String title, Movie movie) {
         String query = "UPDATE movies SET title = ?, genre = ?, poster = ?, summary = ? WHERE title = ?";
         try (Connection connection = getConnection();
@@ -97,6 +133,11 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Retrieves all products from the database.
+     *
+     * @return A list of {@link Product} objects representing all products in the database.
+     */
     public List<Product> getAllProducts() {
         String query = "SELECT * FROM products";  // Assuming table name is 'products'
         List<Product> products = new ArrayList<>();
@@ -118,6 +159,12 @@ public class DatabaseConnection {
         return products;
     }
 
+    /**
+     * Adds a new product to the database.
+     *
+     * @param product The {@link Product} object representing the product to be added.
+     * @return {@code true} if the product was successfully added, {@code false} otherwise.
+     */
     public boolean addProduct(Product product) {
         String query = "INSERT INTO products (name, price, quantity) VALUES (?, ?, ?)";
         try (Connection connection = getConnection();
@@ -133,6 +180,12 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Updates an existing product in the database.
+     *
+     * @param product The {@link Product} object containing the updated product data.
+     * @return {@code true} if the product was successfully updated, {@code false} otherwise.
+     */
     public boolean updateProduct(Product product) {
         String query = "UPDATE products SET name = ?, price = ?, quantity = ? WHERE id = ?";
         try (Connection connection = getConnection();
@@ -149,6 +202,12 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Deletes a product from the database.
+     *
+     * @param selectedProduct The {@link Product} object representing the product to be deleted.
+     * @return {@code true} if the product was successfully deleted, {@code false} otherwise.
+     */
     public boolean deleteProduct(Product selectedProduct) {
         String query = "DELETE FROM products WHERE id = ?";
         try (Connection connection = getConnection();
@@ -162,6 +221,11 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return A list of {@link User} objects representing all users in the database.
+     */
     public List<User> getAllUsers() {
         String query = "SELECT * FROM users";
         List<User> users = new ArrayList<>();
@@ -184,6 +248,12 @@ public class DatabaseConnection {
         return users;
     }
 
+    /**
+     * Adds a new user to the database.
+     *
+     * @param user The {@link User} object representing the user to be added.
+     * @return {@code true} if the user was successfully added, {@code false} otherwise.
+     */
     public boolean addUser(User user) {
         String query = "INSERT INTO users (username, name, password, role) VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection();
@@ -200,6 +270,12 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Updates an existing user in the database.
+     *
+     * @param user The {@link User} object containing the updated user data.
+     * @return {@code true} if the user was successfully updated, {@code false} otherwise.
+     */
     public boolean updateUser(User user) {
         String query = "UPDATE users SET username = ?, name = ?, password = ?, role = ? WHERE id = ?";
         try (Connection connection = getConnection();
@@ -217,6 +293,12 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Removes a user from the database.
+     *
+     * @param selectedUser The {@link User} object representing the user to be removed.
+     * @return {@code true} if the user was successfully removed, {@code false} otherwise.
+     */
     public boolean removeUser(User selectedUser) {
         String query = "DELETE FROM users WHERE id = ?";
         try (Connection connection = getConnection();
@@ -230,6 +312,11 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Retrieves all distinct movie genres from the database.
+     *
+     * @return A list of strings representing all distinct movie genres.
+     */
     public List<String> getAllGenres() {
         String query = "SELECT DISTINCT genre FROM movies";
         List<String> genres = new ArrayList<>();
@@ -247,6 +334,11 @@ public class DatabaseConnection {
         return genres;
     }
 
+    /**
+     * Retrieves the current ticket price from the database.
+     *
+     * @return A {@link BigDecimal} representing the current ticket price, or {@code null} if an error occurs.
+     */
     public BigDecimal getTicketPrice() {
         String query = "SELECT ticket FROM prices";
         try (Connection connection = getConnection();
@@ -263,6 +355,11 @@ public class DatabaseConnection {
         return null;
     }
 
+    /**
+     * Retrieves the current discount rate from the database.
+     *
+     * @return A {@link BigDecimal} representing the current discount rate, or {@code null} if an error occurs.
+     */
     public BigDecimal getDiscountRate() {
         String query = "SELECT discount FROM prices";
         try (Connection connection = getConnection();
@@ -279,6 +376,13 @@ public class DatabaseConnection {
         return null;
     }
 
+    /**
+     * Updates the ticket price and discount rate in the database.
+     *
+     * @param newTicketPrice The new ticket price.
+     * @param newDiscountRate The new discount rate.
+     * @return {@code true} if the prices were successfully updated, {@code false} otherwise.
+     */
     public boolean updatePrices(BigDecimal newTicketPrice, BigDecimal newDiscountRate) {
         String query = "UPDATE prices SET ticket = ?, discount = ?";
         try (Connection connection = getConnection();
@@ -293,6 +397,12 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Retrieves all sessions for a specific movie based on its ID.
+     *
+     * @param id The ID of the movie.
+     * @return A list of {@link Session} objects representing all sessions for the specified movie.
+     */
     public List<Session> getSessionsForMovie(int id) {
         String query = "SELECT * FROM sessions WHERE movie_id = ?";
         List<Session> sessions = new ArrayList<>();
@@ -491,6 +601,11 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Retrieves the current discount percentage from the database.
+     *
+     * @return A {@link BigDecimal} representing the current discount percentage, or {@code null} if an error occurs.
+     */
     public BigDecimal getDiscountPercentage() {
         String query = "SELECT discount FROM prices";
         try (Connection connection = getConnection();
@@ -505,6 +620,14 @@ public class DatabaseConnection {
         return null;
     }
 
+    /**
+     * Retrieves the available seats for a given movie session.
+     *
+     * @param movieId The ID of the movie.
+     * @param date The date of the session.
+     * @param location The location of the session.
+     * @return A list of integers representing the available seat numbers.
+     */
     public List<Integer> getAvailableSeats(int movieId, LocalDate date, String location) {
         List<Integer> availableSeats = new ArrayList<>();
         try (Connection connection = getConnection()) {
@@ -523,6 +646,4 @@ public class DatabaseConnection {
         }
         return availableSeats;
     }
-
-
 }

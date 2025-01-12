@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Controller for managing the admin menu interface, including movie management and user actions.
+ */
 public class AdminMenuController {
 
     @FXML
@@ -52,6 +55,9 @@ public class AdminMenuController {
 
     private final ObservableList<Movie> movieList = FXCollections.observableArrayList();
 
+    /**
+     * Initializes the table with movie data and sets the listener for movie selection.
+     */
     @FXML
     public void initialize() {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -71,6 +77,9 @@ public class AdminMenuController {
         movieTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> displayMovieDetails(newValue));
     }
 
+    /**
+     * Opens a dialog for adding a new movie and validates user input.
+     */
     @FXML
     private void onAddMovie() {
         Dialog<Movie> dialog = new Dialog<>();
@@ -130,6 +139,11 @@ public class AdminMenuController {
         });
     }
 
+    /**
+     * Displays the details of the selected movie.
+     *
+     * @param movie the movie whose details are to be displayed
+     */
     private void displayMovieDetails(Movie movie) {
         if (movie != null) {
             selectedTitle.setText("Title: " + movie.getTitle());
@@ -145,6 +159,9 @@ public class AdminMenuController {
         }
     }
 
+    /**
+     * Clears the movie details from the display.
+     */
     private void clearMovieDetails() {
         selectedTitle.setText("Title: ");
         selectedGenre.setText("Genre: ");
@@ -152,6 +169,11 @@ public class AdminMenuController {
         selectedPoster.setImage(null);
     }
 
+    /**
+     * Handles the update action for the selected movie.
+     *
+     * @param actionEvent the event triggered by the action
+     */
     public void onUpdateMovie(ActionEvent actionEvent) {
         Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
         if (selectedMovie == null) {
@@ -216,6 +238,12 @@ public class AdminMenuController {
         });
     }
 
+    /**
+     * Shows an alert with a warning message.
+     *
+     * @param title   the title of the alert
+     * @param content the content of the alert
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -224,6 +252,12 @@ public class AdminMenuController {
         alert.showAndWait();
     }
 
+    /**
+     * Shows an information alert with a success message.
+     *
+     * @param title   the title of the alert
+     * @param content the content of the alert
+     */
     private void showInfo(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -232,6 +266,12 @@ public class AdminMenuController {
         alert.showAndWait();
     }
 
+    /**
+     * Validates whether the image at the given URL is valid.
+     *
+     * @param url the URL of the image
+     * @return true if the image is valid, false otherwise
+     */
     private boolean isValidImage(String url) {
         try {
             Image image = new Image(url, 1, 1, true, true);
@@ -241,15 +281,30 @@ public class AdminMenuController {
         }
     }
 
+    /**
+     * Sets the username label with the provided username.
+     *
+     * @param username the username to be displayed
+     */
     public void setUsername(String username) {
         usernameLabel.setText("Logged in as: " + username);
     }
 
+    /**
+     * Handles the logout action and redirects to the login screen.
+     *
+     * @param actionEvent the event triggered by the action
+     */
     public void onLogout(ActionEvent actionEvent) {
         MainApplication app = new MainApplication();
         app.showLoginScreen((Stage) usernameLabel.getScene().getWindow());
     }
 
+    /**
+     * Opens the session schedule for the selected movie.
+     *
+     * @param actionEvent the event triggered by the action
+     */
     public void onViewSchedule(ActionEvent actionEvent) {
         Movie selectedMovie = movieTable.getSelectionModel().getSelectedItem();
         if (selectedMovie == null) {

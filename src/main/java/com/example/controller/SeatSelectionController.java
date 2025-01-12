@@ -1,3 +1,8 @@
+/**
+ * The SeatSelectionController class manages the seat selection functionality
+ * for a movie ticket booking system. It handles user interactions for selecting
+ * seats, displays available seats, and navigates between scenes.
+ */
 package com.example.controller;
 
 import com.example.database.DatabaseConnection;
@@ -25,15 +30,27 @@ import java.util.List;
 
 public class SeatSelectionController {
 
+    /**
+     * ImageView displaying the hall layout.
+     */
     @FXML
     public ImageView hallImageView;
 
+    /**
+     * Label showing the number of available seats.
+     */
     @FXML
     private Label availableSeatsLabel;
 
+    /**
+     * VBox container for displaying seat input fields.
+     */
     @FXML
     private VBox seatInputVBox;
 
+    /**
+     * Label displaying the username of the logged-in user.
+     */
     @FXML
     private Label usernameLabel;
 
@@ -45,19 +62,37 @@ public class SeatSelectionController {
     private String hall;
     private List<Product> selectedProducts;
 
+    /**
+     * Initializes the controller. Invoked automatically by the FXML loader.
+     */
     @FXML
     public void initialize() {
 
     }
 
+    /**
+     * Sets the selected movie.
+     *
+     * @param movie The movie to set.
+     */
     public void setMovie(Movie movie) {
         this.movie = movie;
     }
 
+    /**
+     * Sets the selected date.
+     *
+     * @param date The date to set.
+     */
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
+    /**
+     * Sets the selected session time.
+     *
+     * @param session The session time to set.
+     */
     public void setSession(String session) {
         this.session = session;
         extractHallFromSession();
@@ -66,26 +101,54 @@ public class SeatSelectionController {
         displaySeatInputs();
     }
 
+    /**
+     * Sets the number of regular tickets.
+     *
+     * @param regularTickets The number of regular tickets to set.
+     */
     public void setRegularTickets(int regularTickets) {
         this.regularTickets = regularTickets;
     }
 
+    /**
+     * Sets the number of discounted tickets.
+     *
+     * @param discountedTickets The number of discounted tickets to set.
+     */
     public void setDiscountedTickets(int discountedTickets) {
         this.discountedTickets = discountedTickets;
     }
 
+    /**
+     * Sets the username of the logged-in user.
+     *
+     * @param username The username to display.
+     */
     public void setUsername(String username) {
         this.usernameLabel.setText(username);
     }
 
+    /**
+     * Sets the selected products.
+     *
+     * @param selectedProducts The list of selected products.
+     */
     public void setSelectedProducts(List<Product> selectedProducts) {
         this.selectedProducts = selectedProducts;
     }
 
+    /**
+     * Retrieves the selected products.
+     *
+     * @return The list of selected products.
+     */
     public List<Product> getProducts() {
         return selectedProducts;
     }
 
+    /**
+     * Extracts the hall name from the session string.
+     */
     private void extractHallFromSession() {
         if (session != null && session.contains(" - ")) {
             String[] parts = session.split(" - ");
@@ -95,6 +158,9 @@ public class SeatSelectionController {
         }
     }
 
+    /**
+     * Loads the image of the selected hall.
+     */
     private void loadHallImage() {
         if (hall.equals("Hall 1")) {
             hallImageView.setImage(new Image("/com/example/images/hall1.png"));
@@ -103,12 +169,18 @@ public class SeatSelectionController {
         }
     }
 
+    /**
+     * Loads the available seats for the selected movie, date, and hall.
+     */
     private void loadAvailableSeats() {
         DatabaseConnection db = new DatabaseConnection();
         List<Integer> availableSeats = db.getAvailableSeats(movie.getId(), date, hall);
         availableSeatsLabel.setText("Available Seats: " + availableSeats.toString());
     }
 
+    /**
+     * Displays input fields for seat numbers based on the ticket count.
+     */
     private void displaySeatInputs() {
         int totalTickets = regularTickets + discountedTickets;
         for (int i = 0; i < totalTickets; i++) {
@@ -128,6 +200,11 @@ public class SeatSelectionController {
         }
     }
 
+    /**
+     * Handles the "Back" button click, navigating to the previous scene.
+     *
+     * @param actionEvent The event triggered by the button click.
+     */
     public void onBack(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/TicketSelection.fxml"));
@@ -145,6 +222,12 @@ public class SeatSelectionController {
         }
     }
 
+    /**
+     * Handles the "Confirm" button click, validating seat selections and
+     * navigating to the shopping cart scene.
+     *
+     * @param actionEvent The event triggered by the button click.
+     */
     public void onConfirm(ActionEvent actionEvent) {
         List<Integer> selectedSeats = new ArrayList<>();
         List<Integer> availableSeats = new DatabaseConnection().getAvailableSeats(movie.getId(), date, hall);
@@ -188,6 +271,12 @@ public class SeatSelectionController {
         }
     }
 
+    /**
+     * Displays an alert dialog with the specified title and content.
+     *
+     * @param title   The title of the alert.
+     * @param content The content of the alert.
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
