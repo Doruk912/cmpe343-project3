@@ -47,6 +47,13 @@ CREATE TABLE seats(
     FOREIGN KEY (session_id) REFERENCES sessions (id),
     UNIQUE (session_id, seat_number)
 );
+CREATE TABLE halls (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    capacity INT NOT NULL
+);
+
+
 
 INSERT INTO users (username, name, password, role) VALUES
 ('cashier1', 'John Doe', '$2a$12$bg8YICXCIZEDOwkLH8r7aunb1cvwodIeXdeHSxIHxvEM5Ab4fSzXm', 'cashier'), -- Password: cashier1
@@ -77,6 +84,10 @@ INSERT INTO sessions (movie_id, date, time, location) VALUES
 (2, '2025-01-11', '17:30:00', 'Hall 1'),
 (3, '2025-01-12', '20:00:00', 'Hall 1'),
 (4, '2025-01-13', '15:00:00', 'Hall 1');
+
+INSERT INTO halls (name, capacity) VALUES
+('Hall 1', 16),
+('Hall 2', 48);
 
 INSERT INTO seats (session_id, seat_number) VALUES
 (1, 1),

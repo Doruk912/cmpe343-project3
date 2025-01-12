@@ -16,8 +16,8 @@ import java.util.List;
 public class DatabaseConnection {
 
     private static final String URL = "jdbc:mysql://localhost:3306/group20";
-    private static final String USER = "myuser";
-    private static final String PASSWORD = "1234";
+    private static final String USER = "root";
+    private static final String PASSWORD = "12345678";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -316,46 +316,176 @@ public class DatabaseConnection {
         return sessions;
     }
 
+
+    /**
+     * Adds a new session to the database and initializes seats for the session
+     * based on the hall's capacity.
+     *
+     * @param session The session object containing the details of the session to be added.
+     * @return {@code true} if the session and its seats were successfully added, {@code false} otherwise.
+     * @throws SQLException If a database error occurs during the operation.
+     *
+     * <p>
+     * This method performs the following steps:
+     * <ul>
+     *     <li>Fetches the hall's capacity based on the provided location (hall name).</li>
+     *     <li>Inserts the session details into the {@code sessions} table.</li>
+     *     <li>Retrieves the auto-generated session ID.</li>
+     *     <li>Initializes seats in the {@code seats} table based on the hall's capacity.</li>
+     * </ul>
+     * </p>
+     */
     public boolean addSession(Session session) {
-        String query = "INSERT INTO sessions (movie_id, date, time, location) VALUES (?, ?, ?, ?)";
+        String sessionQuery = "INSERT INTO sessions (movie_id, date, time, location) VALUES (?, ?, ?, ?)";
+        String seatQuery = "INSERT INTO seats (session_id, seat_number) VALUES (?, ?)";
+        String capacityQuery = "SELECT capacity FROM halls WHERE name = ?";
+
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, session.getMovieId());
-            preparedStatement.setDate(2, Date.valueOf(session.getDate()));
-            preparedStatement.setTime(3, Time.valueOf(session.getTime()));
-            preparedStatement.setString(4, session.getLocation());
-            return preparedStatement.executeUpdate() > 0;
+             PreparedStatement sessionStatement = connection.prepareStatement(sessionQuery, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement seatStatement = connection.prepareStatement(seatQuery);
+             PreparedStatement capacityStatement = connection.prepareStatement(capacityQuery)) {
+
+            capacityStatement.setString(1, session.getLocation());
+            ResultSet capacityResult = capacityStatement.executeQuery();
+
+            int hallCapacity = 0;
+            if (capacityResult.next()) {
+                hallCapacity = capacityResult.getInt("capacity");
+            } else {
+                System.out.println("Error: Hall not found: " + session.getLocation());
+                return false;
+            }
+
+            sessionStatement.setInt(1, session.getMovieId());
+            sessionStatement.setDate(2, Date.valueOf(session.getDate()));
+            sessionStatement.setTime(3, Time.valueOf(session.getTime()));
+            sessionStatement.setString(4, session.getLocation());
+            int rowsAffected = sessionStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ResultSet generatedKeys = sessionStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int sessionId = generatedKeys.getInt(1);
+
+                    for (int seatNumber = 1; seatNumber <= hallCapacity; seatNumber++) {
+                        seatStatement.setInt(1, sessionId);
+                        seatStatement.setInt(2, seatNumber);
+                        seatStatement.addBatch();
+                    }
+                    seatStatement.executeBatch();
+                }
+                return true;
+            }
         } catch (SQLException e) {
-            System.out.println("An error occurred while adding the session");
+            System.out.println("An error occurred while adding the session and initializing seats");
             e.printStackTrace();
         }
         return false;
     }
 
+    /**
+     * Updates an existing session in the database and reinitializes seats
+     * if the hall (location) is changed.
+     *
+     * @param session The session object containing the updated details of the session.
+     * @return {@code true} if the session was successfully updated and seats were reinitialized (if needed),
+     *         {@code false} otherwise.
+     * @throws SQLException If a database error occurs during the operation.
+     *
+     * <p>
+     * This method performs the following steps:
+     * <ul>
+     *     <li>Updates the session details (e.g., date, time, location) in the {@code sessions} table.</li>
+     *     <li>Fetches the hall's capacity based on the updated location (hall name).</li>
+     *     <li>Deletes existing seats if the location changes.</li>
+     *     <li>Initializes new seats in the {@code seats} table based on the new hall's capacity.</li>
+     * </ul>
+     * </p>
+     */
     public boolean updateSession(Session session) {
-        String query = "UPDATE sessions SET date = ?, time = ?, location = ? WHERE id = ?";
+        String updateSessionQuery = "UPDATE sessions SET date = ?, time = ?, location = ? WHERE id = ?";
+        String capacityQuery = "SELECT capacity FROM halls WHERE name = ?";
+        String deleteSeatsQuery = "DELETE FROM seats WHERE session_id = ?";
+        String insertSeatsQuery = "INSERT INTO seats (session_id, seat_number) VALUES (?, ?)";
+
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setDate(1, Date.valueOf(session.getDate()));
-            preparedStatement.setTime(2, Time.valueOf(session.getTime()));
-            preparedStatement.setString(3, session.getLocation());
-            preparedStatement.setInt(4, session.getId());
-            return preparedStatement.executeUpdate() > 0;
+             PreparedStatement updateSessionStatement = connection.prepareStatement(updateSessionQuery);
+             PreparedStatement capacityStatement = connection.prepareStatement(capacityQuery);
+             PreparedStatement deleteSeatsStatement = connection.prepareStatement(deleteSeatsQuery);
+             PreparedStatement insertSeatsStatement = connection.prepareStatement(insertSeatsQuery)) {
+
+
+            updateSessionStatement.setDate(1, Date.valueOf(session.getDate()));
+            updateSessionStatement.setTime(2, Time.valueOf(session.getTime()));
+            updateSessionStatement.setString(3, session.getLocation());
+            updateSessionStatement.setInt(4, session.getId());
+            int rowsUpdated = updateSessionStatement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                // Fetch the hall capacity based on the updated location
+                capacityStatement.setString(1, session.getLocation());
+                ResultSet capacityResult = capacityStatement.executeQuery();
+
+                int hallCapacity = 0;
+                if (capacityResult.next()) {
+                    hallCapacity = capacityResult.getInt("capacity");
+                } else {
+                    System.out.println("Error: Hall not found: " + session.getLocation());
+                    return false; // Invalid hall
+                }
+
+
+                deleteSeatsStatement.setInt(1, session.getId());
+                deleteSeatsStatement.executeUpdate();
+
+                for (int seatNumber = 1; seatNumber <= hallCapacity; seatNumber++) {
+                    insertSeatsStatement.setInt(1, session.getId());
+                    insertSeatsStatement.setInt(2, seatNumber);
+                    insertSeatsStatement.addBatch();
+                }
+                insertSeatsStatement.executeBatch();
+
+                return true;
+            }
         } catch (SQLException e) {
-            System.out.println("An error occurred while updating the session");
+            System.out.println("An error occurred while updating the session and reinitializing seats");
             e.printStackTrace();
         }
         return false;
     }
 
+    /**
+     * Removes an existing session and all its associated seats from the database.
+     *
+     * @param selectedSession The session object representing the session to be removed.
+     * @return {@code true} if the session and its associated seats were successfully removed, {@code false} otherwise.
+     * @throws SQLException If a database error occurs during the operation.
+     *
+     * <p>
+     * This method performs the following steps:
+     * <ul>
+     *     <li>Deletes all seats associated with the specified session ID from the {@code seats} table.</li>
+     *     <li>Deletes the session entry from the {@code sessions} table.</li>
+     * </ul>
+     * </p>
+     */
     public boolean removeSession(Session selectedSession) {
-        String query = "DELETE FROM sessions WHERE id = ?";
+        String deleteSeatsQuery = "DELETE FROM seats WHERE session_id = ?";
+        String deleteSessionQuery = "DELETE FROM sessions WHERE id = ?";
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, selectedSession.getId());
-            return preparedStatement.executeUpdate() > 0;
+             PreparedStatement deleteSeatsStatement = connection.prepareStatement(deleteSeatsQuery);
+             PreparedStatement deleteSessionStatement = connection.prepareStatement(deleteSessionQuery)) {
+
+            // Delete associated seats
+            deleteSeatsStatement.setInt(1, selectedSession.getId());
+            deleteSeatsStatement.executeUpdate();
+
+            // Delete the session
+            deleteSessionStatement.setInt(1, selectedSession.getId());
+            return deleteSessionStatement.executeUpdate() > 0;
+
         } catch (SQLException e) {
-            System.out.println("An error occurred while deleting the session");
+            System.out.println("An error occurred while removing the session and its associated seats");
             e.printStackTrace();
         }
         return false;
