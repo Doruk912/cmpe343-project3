@@ -8,3 +8,4 @@
 6. Stocks for products are not decremented on the database when they are bought
 7. In manager menu total revenue and the tax amounts to be paid not implemented
 8. Customer requests for cancellations and refunds not implemenetd
+9. Checkout button in shopping cart doesn't close the checkout menu and return to main cashier menu.
