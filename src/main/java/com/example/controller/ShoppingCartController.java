@@ -263,6 +263,10 @@ public class ShoppingCartController {
                         .setMarginTop(20);
                 document.add(totalParagraph);
 
+                DatabaseConnection db = new DatabaseConnection();
+                db.takeSeats(movie.getId(), date, session, selectedSeats);   //NOT WORKING
+
+
                 document.close();
             } catch (Exception e) {
                 e.printStackTrace();

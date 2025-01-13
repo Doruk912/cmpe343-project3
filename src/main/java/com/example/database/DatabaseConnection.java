@@ -23,8 +23,8 @@ import java.util.List;
 public class DatabaseConnection {
 
     private static final String URL = "jdbc:mysql://localhost:3306/group20";
-    private static final String USER = "root";
-    private static final String PASSWORD = "12345678";
+    private static final String USER = "myuser";
+    private static final String PASSWORD = "1234";
 
     /**
      * Establishes a connection to the database.
@@ -636,5 +636,29 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
         return availableSeats;
+    }
+
+    public boolean takeSeats(int movieId, LocalDate date, String location, List<Integer> seatNumbers) {
+        String query = "UPDATE seats SET is_taken = TRUE WHERE session_id = (SELECT id FROM sessions WHERE movie_id = ? AND date = ? AND location = ?) AND seat_number = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            for (int seatNumber : seatNumbers) {
+                statement.setInt(1, movieId);
+                statement.setDate(2, java.sql.Date.valueOf(date));
+                statement.setString(3, location);
+                statement.setInt(4, seatNumber);
+                statement.addBatch();
+            }
+            int[] updateCounts = statement.executeBatch();
+            for (int count : updateCounts) {
+                if (count == 0) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
