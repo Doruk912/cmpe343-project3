@@ -53,8 +53,6 @@ CREATE TABLE halls (
     capacity INT NOT NULL
 );
 
-
-
 INSERT INTO users (username, name, password, role) VALUES
 ('cashier1', 'John Doe', '$2a$12$bg8YICXCIZEDOwkLH8r7aunb1cvwodIeXdeHSxIHxvEM5Ab4fSzXm', 'cashier'), -- Password: cashier1
 ('admin1', 'Jane Smith', '$2a$12$8P4xr1QnXcpd3Rv1xDusSeWemcVPFKoeYXCSjAwVAZcvHABHdHZQi', 'admin'), -- Password: admin1
@@ -106,5 +104,3 @@ INSERT INTO seats (session_id, seat_number) VALUES
 (1, 14),
 (1, 15),
 (1, 16);
-
-select * from seats

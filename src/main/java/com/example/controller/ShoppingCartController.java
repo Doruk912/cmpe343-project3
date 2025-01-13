@@ -267,6 +267,12 @@ public class ShoppingCartController {
                 db.takeSeats(movie.getId(), date, extractHall(session), selectedSeats);
 
                 document.close();
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/Login.fxml"));
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
