@@ -264,14 +264,21 @@ public class ShoppingCartController {
                 document.add(totalParagraph);
 
                 DatabaseConnection db = new DatabaseConnection();
-                db.takeSeats(movie.getId(), date, session, selectedSeats);   //NOT WORKING
-
+                db.takeSeats(movie.getId(), date, extractHall(session), selectedSeats);
 
                 document.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String extractHall(String session) {
+        String[] parts = session.split(" - ");
+        if (parts.length > 1) {
+            return parts[1];
+        }
+        return "";
     }
 
     public void onBack(ActionEvent actionEvent) {
