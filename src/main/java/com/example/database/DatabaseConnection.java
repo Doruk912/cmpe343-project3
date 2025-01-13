@@ -433,9 +433,7 @@ public class DatabaseConnection {
      *
      * @param session The session object containing the details of the session to be added.
      * @return {@code true} if the session and its seats were successfully added, {@code false} otherwise.
-     * @throws SQLException If a database error occurs during the operation.
      *
-     * <p>
      * This method performs the following steps:
      * <ul>
      *     <li>Fetches the hall's capacity based on the provided location (hall name).</li>
@@ -443,7 +441,6 @@ public class DatabaseConnection {
      *     <li>Retrieves the auto-generated session ID.</li>
      *     <li>Initializes seats in the {@code seats} table based on the hall's capacity.</li>
      * </ul>
-     * </p>
      */
     public boolean addSession(Session session) {
         String sessionQuery = "INSERT INTO sessions (movie_id, date, time, location) VALUES (?, ?, ?, ?)";
@@ -500,9 +497,7 @@ public class DatabaseConnection {
      * @param session The session object containing the updated details of the session.
      * @return {@code true} if the session was successfully updated and seats were reinitialized (if needed),
      *         {@code false} otherwise.
-     * @throws SQLException If a database error occurs during the operation.
      *
-     * <p>
      * This method performs the following steps:
      * <ul>
      *     <li>Updates the session details (e.g., date, time, location) in the {@code sessions} table.</li>
@@ -510,7 +505,6 @@ public class DatabaseConnection {
      *     <li>Deletes existing seats if the location changes.</li>
      *     <li>Initializes new seats in the {@code seats} table based on the new hall's capacity.</li>
      * </ul>
-     * </p>
      */
     public boolean updateSession(Session session) {
         String updateSessionQuery = "UPDATE sessions SET date = ?, time = ?, location = ? WHERE id = ?";
@@ -569,15 +563,12 @@ public class DatabaseConnection {
      *
      * @param selectedSession The session object representing the session to be removed.
      * @return {@code true} if the session and its associated seats were successfully removed, {@code false} otherwise.
-     * @throws SQLException If a database error occurs during the operation.
      *
-     * <p>
      * This method performs the following steps:
      * <ul>
      *     <li>Deletes all seats associated with the specified session ID from the {@code seats} table.</li>
      *     <li>Deletes the session entry from the {@code sessions} table.</li>
      * </ul>
-     * </p>
      */
     public boolean removeSession(Session selectedSession) {
         String deleteSeatsQuery = "DELETE FROM seats WHERE session_id = ?";
